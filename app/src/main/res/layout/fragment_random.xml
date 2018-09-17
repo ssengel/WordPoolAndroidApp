@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="30dp"
+    android:background="#FFFFFF"
+    tools:context=".RandomFragment">
+
+
+    <com.wajahatkarim3.easyflipview.EasyFlipView
+        android:id="@+id/flipView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        app:flipDuration="300"
+        app:flipEnabled="true"
+        app:flipFrom="right"
+        app:flipOnTouch="true"
+        app:flipType="horizontal">
+
+        <!-- Back Layout Goes Here -->
+        <TextView
+            android:id="@+id/txtTr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/textColorWhite"
+            android:text="Sessiz"
+            android:textSize="30dp" />
+
+        <!-- Front Layout Goes Here -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/textColorWhite">
+
+            <TextView
+                android:layout_marginBottom="5dp"
+                android:textColor="@color/textColorBlue"
+                android:id="@+id/txtEng"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Silence"
+                android:textSize="30dp" />
+            <TextView
+                android:textColor="@color/textColorGray"
+                android:id="@+id/txtSentence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Silence like water"
+                android:layout_marginHorizontal="20dp"
+                android:textSize="17dp" />
+        </LinearLayout>
+
+
+    </com.wajahatkarim3.easyflipview.EasyFlipView>
+
+
+</FrameLayout>
