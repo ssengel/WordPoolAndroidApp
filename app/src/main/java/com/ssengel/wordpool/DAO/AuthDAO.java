@@ -9,24 +9,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ssengel.wordpool.helper.Config;
-import com.ssengel.wordpool.helper.MyVolley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.ssengel.wordpool.asyncResponce.AuthServiceCallBack;
+import com.ssengel.wordpool.helper.MyVolley;
 
 import static android.content.ContentValues.TAG;
 
 public class AuthDAO {
-
-    private Context mContext;
-    private RequestQueue mRequestQueue;
-
-    public AuthDAO(Context context) {
-        mContext = context;
-        mRequestQueue = MyVolley.getInstance(context).getRequestQueue();
-    }
 
     public void login(String email, String password, final AuthServiceCallBack callBack) {
 
@@ -56,6 +48,6 @@ public class AuthDAO {
             }
         });
 
-        mRequestQueue.add(objectRequest);
+        MyVolley.getInstance().addToRequestQueue(objectRequest);
     }
 }

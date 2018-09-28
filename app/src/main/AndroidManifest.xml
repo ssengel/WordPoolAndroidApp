@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".helper.MyVolley"
         android:allowBackup="true"
         android:icon="@drawable/ic_logo_512dp"
         android:label="@string/app_name"

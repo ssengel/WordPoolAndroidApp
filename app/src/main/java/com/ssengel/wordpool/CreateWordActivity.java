@@ -30,7 +30,7 @@ public class CreateWordActivity extends AppCompatActivity {
         edtTr = (EditText) findViewById(R.id.edtTr);
         edtSentence = (EditText) findViewById(R.id.edtSentence);
 
-        wordDAO = new WordDAO(getApplicationContext());
+        wordDAO = new WordDAO();
     }
 
     private void initListeners(){

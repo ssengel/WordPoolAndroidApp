@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = (Button) findViewById(R.id.btnLogin);
 
         //instance
-        authDAO = new AuthDAO(getApplicationContext());
+        authDAO = new AuthDAO();
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
     }

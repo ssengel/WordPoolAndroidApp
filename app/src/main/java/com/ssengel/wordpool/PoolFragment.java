@@ -48,7 +48,7 @@ public class PoolFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_pool, container, false);
 
-        wordDAO = new WordDAO(getActivity());
+        wordDAO = new WordDAO();
         mWordList = new ArrayList<>();
         wordListAdapter = new WordListAdapter(mWordList);
         mLayoutManager = new LinearLayoutManager(getActivity());

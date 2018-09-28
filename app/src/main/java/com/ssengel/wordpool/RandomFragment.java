@@ -62,7 +62,7 @@ public class RandomFragment extends Fragment {
         pDialog = new ProgressDialog(getActivity());
         pDialog.setCancelable(false);
 
-        wordDAO = new WordDAO(getActivity());
+        wordDAO = new WordDAO();
 
         fetchData();
         initListeners();

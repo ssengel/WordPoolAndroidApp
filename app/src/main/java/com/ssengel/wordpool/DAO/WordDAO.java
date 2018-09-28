@@ -1,17 +1,15 @@
 package com.ssengel.wordpool.DAO;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.ssengel.wordpool.asyncResponce.WordObjectCallBack;
 import com.ssengel.wordpool.helper.Config;
@@ -30,12 +28,7 @@ import java.util.Map;
 
 public class WordDAO {
 
-    private RequestQueue mRequestQueue;
-    private ArrayList<Word> mWordList = new ArrayList<>();
-
-    public WordDAO(Context context) {
-        mRequestQueue = MyVolley.getInstance(context).getRequestQueue();
-    }
+    private ArrayList<Word> mWordList;
 
     public void createWord(Word word, final WordObjectCallBack callBack){
         JSONObject params = new JSONObject();
@@ -67,7 +60,8 @@ public class WordDAO {
             }
         };
 
-        mRequestQueue.add(req);
+
+        MyVolley.getInstance().addToRequestQueue(req);
     }
 
     public void getWords(final WordListCallBack callBack) {
@@ -93,6 +87,6 @@ public class WordDAO {
             }
         };
 
-        mRequestQueue.add(arrayRequest);
+        MyVolley.getInstance().addToRequestQueue(arrayRequest);
     }
 }
