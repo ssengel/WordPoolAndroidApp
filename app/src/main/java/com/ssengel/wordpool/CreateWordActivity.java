@@ -50,7 +50,7 @@ public class CreateWordActivity extends AppCompatActivity {
 
                     @Override
                     public void responseError(Error error) {
-                        Toast.makeText(getApplicationContext(),"Couldn't now created new word\n." +error.toString(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"Couldn't created new word\n." +error.getMessage(),Toast.LENGTH_SHORT).show();
 
                     }
                 });

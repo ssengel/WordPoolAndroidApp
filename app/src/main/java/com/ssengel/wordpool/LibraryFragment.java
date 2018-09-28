@@ -1,37 +1,36 @@
 package com.ssengel.wordpool;
 
+
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.ssengel.wordpool.DAO.WordDAO;
-import com.ssengel.wordpool.adapter.MyAdapter;
-import com.ssengel.wordpool.asyncResponce.WordListCallBack;
-import com.ssengel.wordpool.model.Word;
+import com.ssengel.wordpool.adapter.CategoryListAdapter;
+import com.ssengel.wordpool.model.Category;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
 
 public class LibraryFragment extends Fragment {
 
-    private static final String TAG = "MainActivity";
-
     private RecyclerView recyclerView;
-    private WordDAO wordDAO;
-    private ArrayList<Word> mWordList;
-    private MyAdapter wordListAdapter;
-    RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<Category> categoryList;
+    private CategoryListAdapter categoryListAdapter;
 
     public LibraryFragment() {
+        // Required empty public constructor
     }
 
-    public static LibraryFragment newInstance() {
+    // TODO: Rename and change types and number of parameters
+    public static LibraryFragment newInstance(String param1, String param2) {
         LibraryFragment fragment = new LibraryFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -44,37 +43,81 @@ public class LibraryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_library, container, false);
 
-        wordDAO = new WordDAO(getActivity());
-        mWordList = new ArrayList<>();
-        wordListAdapter = new MyAdapter(mWordList);
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView = view.findViewById(R.id.categoryList);
+        categoryList = new ArrayList<>();
+        categoryListAdapter = new CategoryListAdapter(getActivity(), categoryList);
 
-        recyclerView = view.findViewById(R.id.wordList);
-        recyclerView.setAdapter(wordListAdapter);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
         recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(8), true));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(categoryListAdapter);
+        recyclerView.setNestedScrollingEnabled(false);
 
-        fetchWords();
+        fetchCategories();
+
         return view;
     }
 
-    private void fetchWords() {
-        wordDAO.getWords(new WordListCallBack() {
-            @Override
-            public void processFinish(List list) {
-                Collections.reverse(list);
-                mWordList.clear();
-                mWordList.addAll(list);
-                wordListAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void responseError(Error error) {
-                Toast.makeText(getActivity(), "Could not fetch the word items", Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void fetchCategories(){
+        categoryList.add(new Category("Category A",""));
+        categoryList.add(new Category("Category B",""));
+        categoryList.add(new Category("Category C",""));
+        categoryList.add(new Category("Category D",""));
+        categoryList.add(new Category("Category E",""));
     }
+
+
+
+
+
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
+
+        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
+    }
+
+    /**
+     * Converting dp to pixel
+     */
+    private int dpToPx(int dp) {
+        Resources r = getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
 }

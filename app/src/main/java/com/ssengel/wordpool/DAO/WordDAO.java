@@ -10,7 +10,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.ssengel.wordpool.asyncResponce.WordObjectCallBack;
 import com.ssengel.wordpool.helper.Config;
 import com.ssengel.wordpool.asyncResponce.WordListCallBack;
@@ -23,6 +25,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class WordDAO {
@@ -47,17 +50,7 @@ public class WordDAO {
         JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, Config.getUrlWord(), params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Word word = new Word();
-                try {
-                    word.set_id(response.getString("_id"));
-                    word.setUserId(response.getString("userId"));
-                    word.setEng(response.getString("eng"));
-                    word.setTr(response.getString("tr"));
-                    word.setSentence(response.getString("sentence"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+                Word word = new Gson().fromJson(response.toString(), new TypeToken<Word>(){}.getType());
                 callBack.processFinish(word);
             }
         }, new Response.ErrorListener() {
@@ -83,25 +76,7 @@ public class WordDAO {
             @Override
             public void onResponse(JSONArray response) {
 
-                ArrayList<Word> mWordList = new ArrayList<>();
-
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        JSONObject jsonObject = response.getJSONObject(i);
-                        Word word = new Word();
-                        word.set_id(jsonObject.getString("_id"));
-                        word.setUserId(jsonObject.getString("userId"));
-                        word.setEng(jsonObject.getString("eng"));
-                        word.setTr(jsonObject.getString("tr"));
-                        word.setSentence(jsonObject.getString("sentence"));
-
-                        mWordList.add(word);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
+                List<Word> mWordList = new Gson().fromJson(response.toString(), new TypeToken<List<Word>>(){}.getType());
                 callBack.processFinish(mWordList);
             }
         }, new Response.ErrorListener() {

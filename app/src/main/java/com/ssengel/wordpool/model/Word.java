@@ -1,21 +1,26 @@
 package com.ssengel.wordpool.model;
 
+import java.util.Date;
+
 public class Word {
     private String _id;
     private String userId;
     private String eng;
     private String tr;
     private String sentence;
+    private String category;
+    private Date createdAt;
 
     public Word() {
     }
 
-    public Word(String _id, String userId, String eng, String tr, String sentence) {
+    public Word(String _id, String userId, String eng, String tr, String sentence,String category, Date createdAt) {
         this._id = _id;
         this.userId = userId;
         this.eng = eng;
         this.tr = tr;
         this.sentence = sentence;
+        this.category = category;
     }
 
     public String get_id() {
@@ -58,6 +63,22 @@ public class Word {
         this.sentence = sentence;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public String toString() {
         return "Word{" +
@@ -66,6 +87,8 @@ public class Word {
                 ", eng='" + eng + '\'' +
                 ", tr='" + tr + '\'' +
                 ", sentence='" + sentence + '\'' +
+                ", category='" + category + '\'' +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

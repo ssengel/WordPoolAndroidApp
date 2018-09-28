@@ -82,6 +82,7 @@ public class RandomFragment extends Fragment {
                 }
             }
         });
+
     }
 
     private void updateCurrentWord() {
@@ -102,8 +103,6 @@ public class RandomFragment extends Fragment {
             }
         });
     }
-
-
 
 
 }
