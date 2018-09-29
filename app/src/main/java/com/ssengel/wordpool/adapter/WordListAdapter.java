@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.ssengel.wordpool.R;
@@ -12,10 +14,12 @@ import com.ssengel.wordpool.model.Word;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.MyViewHolder> {
+public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.MyViewHolder> implements Filterable {
 
     private ArrayList<Word> wordList;
+    private ArrayList<Word> wordListFiltered;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -33,9 +37,13 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.MyView
 
         }
     }
+    public interface WordAdapterListener {
+        void onContactSelected(Word word);
+    }
 
     public WordListAdapter(ArrayList<Word> wordList) {
         this.wordList = wordList;
+        this.wordListFiltered = wordList;
     }
 
     @Override
@@ -47,16 +55,49 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        Date date = wordList.get(position).getCreatedAt();
+        Word word = wordListFiltered.get(position);
+        Date date = word.getCreatedAt();
 
-        holder.txtEng.setText(wordList.get(position).getEng());
-        holder.txtSentence.setText(wordList.get(position).getSentence());
-        holder.txtTr.setText(wordList.get(position).getTr());
+        holder.txtEng.setText(word.getEng());
+        holder.txtSentence.setText(word.getSentence());
+        holder.txtTr.setText(word.getTr());
         holder.txtTime.setText(new SimpleDateFormat("d-MM-yyy").format(date));
     }
 
     @Override
     public int getItemCount() {
-        return wordList.size();
+        return wordListFiltered.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    wordListFiltered = wordList;
+                } else {
+                    ArrayList<Word> filteredList = new ArrayList<>();
+                    for (Word word : wordList) {
+                        if (word.getEng().toLowerCase().contains(charString.toLowerCase()) || word.getTr().contains(charSequence) || word.getSentence().contains(charSequence)) {
+                            filteredList.add(word);
+                        }
+                    }
+                    wordListFiltered = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = wordListFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                wordListFiltered = (ArrayList<Word>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
 }
