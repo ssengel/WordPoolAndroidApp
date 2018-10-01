@@ -2,12 +2,12 @@ package com.ssengel.wordpool.model;
 
 public class Category {
     String name;
-    String image;
+    int image;
 
     public Category() {
     }
 
-    public Category(String name, String image) {
+    public Category(String name, int image) {
         this.name = name;
         this.image = image;
     }
@@ -20,11 +20,11 @@ public class Category {
         this.name = name;
     }
 
-    public String getImage() {
+    public int getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(int image) {
         this.image = image;
     }
 

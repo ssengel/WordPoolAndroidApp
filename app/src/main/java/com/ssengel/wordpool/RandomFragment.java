@@ -6,11 +6,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ssengel.wordpool.DAO.WordDAO;
 import com.ssengel.wordpool.asyncResponce.WordListCallBack;
+import com.ssengel.wordpool.helper.CategoryToResorceId;
 import com.ssengel.wordpool.model.Word;
 import com.wajahatkarim3.easyflipview.EasyFlipView;
 
@@ -22,6 +24,7 @@ import java.util.Random;
 public class RandomFragment extends Fragment {
 
     private EasyFlipView flipView;
+    private ImageView imgCategory;
     private TextView txtEng;
     private TextView txtTr;
     private TextView txtSentence;
@@ -54,6 +57,7 @@ public class RandomFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_random, container, false);
 
+        imgCategory = view.findViewById(R.id.imgCategory);
         txtEng = view.findViewById(R.id.txtEng);
         txtTr = view.findViewById(R.id.txtTr);
         txtSentence = view.findViewById(R.id.txtSentence);
@@ -79,10 +83,10 @@ public class RandomFragment extends Fragment {
                     updateCurrentWord();
                     txtEng.setText(currentWord.getEng());
                     txtSentence.setText(currentWord.getSentence());
+                    imgCategory.setImageResource(CategoryToResorceId.getImageResource(currentWord.getCategory()));
                 }
             }
         });
-
     }
 
     private void updateCurrentWord() {

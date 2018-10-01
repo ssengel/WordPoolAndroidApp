@@ -1,14 +1,20 @@
 package com.ssengel.wordpool.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ssengel.wordpool.PoolDetailActivity;
 import com.ssengel.wordpool.R;
+import com.ssengel.wordpool.helper.CategoryToResorceId;
 import com.ssengel.wordpool.model.Word;
 
 import java.text.SimpleDateFormat;
@@ -18,33 +24,35 @@ import java.util.List;
 
 public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.MyViewHolder> implements Filterable {
 
+    private Context context;
     private ArrayList<Word> wordList;
     private ArrayList<Word> wordListFiltered;
 
+    public WordListAdapter(ArrayList<Word> wordList, Context context) {
+        this.context = context;
+        this.wordList = wordList;
+        this.wordListFiltered = wordList;
+    }
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
+        public ImageView imgCategory;
         public TextView txtEng;
         public TextView txtTr;
         public TextView txtSentence;
         public TextView txtTime;
+        public View view;
 
         public MyViewHolder(View listItem) {
             super(listItem);
+            this.view = listItem;
+            imgCategory = (ImageView) listItem.findViewById(R.id.imgCategory);
             txtEng = (TextView) itemView.findViewById(R.id.txtEng);
             txtTr = (TextView) itemView.findViewById(R.id.txtTr);
             txtSentence = (TextView) itemView.findViewById(R.id.txtSentence);
             txtTime = (TextView) itemView.findViewById(R.id.txtTime);
-
         }
     }
-    public interface WordAdapterListener {
-        void onContactSelected(Word word);
-    }
 
-    public WordListAdapter(ArrayList<Word> wordList) {
-        this.wordList = wordList;
-        this.wordListFiltered = wordList;
-    }
 
     @Override
     public WordListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -57,11 +65,20 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.MyView
 
         Word word = wordListFiltered.get(position);
         Date date = word.getCreatedAt();
+        int imgResorceId = CategoryToResorceId.getImageResource(word.getCategory());
 
+        holder.imgCategory.setImageResource(imgResorceId);
         holder.txtEng.setText(word.getEng());
         holder.txtSentence.setText(word.getSentence());
         holder.txtTr.setText(word.getTr());
         holder.txtTime.setText(new SimpleDateFormat("d-MM-yyy").format(date));
+
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //todo: Open Detail Word
+            }
+        });
     }
 
     @Override
@@ -99,5 +116,6 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.MyView
             }
         };
     }
+
 
 }

@@ -32,15 +32,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="?android:attr/windowBackground"
-        app:itemBackground="@color/colorPrimary"
-        android:foreground="?attr/selectableItemBackground"
-        app:itemIconTint="@android:color/white"
-        app:itemTextColor="@android:color/white"
+        app:itemBackground="@drawable/bottom_nav_border"
+        app:itemIconTint="@color/bottom_navigation_foreground"
+        app:itemTextColor="@color/bottom_navigation_foreground"
         app:menu="@menu/navigation" />
-
-
-
 
 
 </android.support.design.widget.CoordinatorLayout>

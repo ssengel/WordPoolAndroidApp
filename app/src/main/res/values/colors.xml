@@ -8,11 +8,13 @@
     <color name="textColorWhite">#FFFFFF</color>
     <color name="textColorGray">#696969</color>
     <color name="textColorBlue">#4285F4</color>
+    
 
     <color name="timeColor">#FBBC05</color>
-
-    <color name="colorPrimary">#1EB980</color>
-    <color name="colorPrimaryDark">#045D56</color>
+    <color name="orangeColorMedium">#e7a200</color>
+    <color name="orangeColor">#e77600</color>
+    <color name="colorPrimary">#4285F4</color>
+    <color name="colorPrimaryDark">#164694</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
     <color name="colorAccent">#000000</color>

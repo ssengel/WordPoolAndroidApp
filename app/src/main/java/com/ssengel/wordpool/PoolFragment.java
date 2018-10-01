@@ -63,7 +63,7 @@ public class PoolFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_pool, container, false);
         wordDAO = new WordDAO();
         mWordList = new ArrayList<>();
-        wordListAdapter = new WordListAdapter(mWordList);
+        wordListAdapter = new WordListAdapter(mWordList, getContext());
         mLayoutManager = new LinearLayoutManager(getActivity());
 
         recyclerView = view.findViewById(R.id.wordList);

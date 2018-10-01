@@ -12,24 +12,26 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.ssengel.wordpool.adapter.CategoryListAdapter;
-import com.ssengel.wordpool.model.Category;
+import com.ssengel.wordpool.adapter.PoolListAdapter;
+import com.ssengel.wordpool.helper.GridSpacingItemDecoration;
+import com.ssengel.wordpool.model.Pool;
+import com.ssengel.wordpool.model.Word;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 public class LibraryFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private ArrayList<Category> categoryList;
-    private CategoryListAdapter categoryListAdapter;
+    private ArrayList<Pool> poolList;
+    private PoolListAdapter poolListAdapter;
 
-    public LibraryFragment() {
-        // Required empty public constructor
-    }
+    public LibraryFragment() {    }
 
-    // TODO: Rename and change types and number of parameters
     public static LibraryFragment newInstance(String param1, String param2) {
         LibraryFragment fragment = new LibraryFragment();
         Bundle args = new Bundle();
@@ -43,21 +45,20 @@ public class LibraryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_library, container, false);
 
         recyclerView = view.findViewById(R.id.categoryList);
-        categoryList = new ArrayList<>();
-        categoryListAdapter = new CategoryListAdapter(getActivity(), categoryList);
+        poolList = new ArrayList<>();
+        poolListAdapter = new PoolListAdapter(getActivity(), poolList);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(8), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(categoryListAdapter);
+        recyclerView.setAdapter(poolListAdapter);
         recyclerView.setNestedScrollingEnabled(false);
 
         fetchCategories();
@@ -65,51 +66,52 @@ public class LibraryFragment extends Fragment {
         return view;
     }
 
+
+
     private void fetchCategories(){
-        categoryList.add(new Category("Category A",""));
-        categoryList.add(new Category("Category B",""));
-        categoryList.add(new Category("Category C",""));
-        categoryList.add(new Category("Category D",""));
-        categoryList.add(new Category("Category E",""));
-    }
+
+
+        ArrayList<Word> list1 = new ArrayList<>();
+        Word w1 = new Word();
+        w1.setEng("health");
+        w1.setTr("saglik");
+        w1.setSentence("asdfasdf asdfasdf asdf asd");
+        w1.setCategory("Health");
+        list1.add(w1);
+
+        ArrayList<Word> list2 = new ArrayList<>();
+        Word w2 = new Word();
+        w2.setEng("Electronic");
+        w2.setTr("saglik");
+        w2.setSentence("asdfasdf asdfasdf asdf asd");
+        w2.setCategory("Electronic");
+        list2.add(w2);
+
+        ArrayList<Word> list3 = new ArrayList<>();
+        Word w3 = new Word();
+        w3.setEng("Art");
+        w3.setTr("saglik");
+        w3.setSentence("asdfasdf asdfasdf asdf asd");
+        w3.setCategory("Art");
+
+        Word w4 = new Word();
+        w4.setEng("Art");
+        w4.setTr("saglik");
+        w4.setSentence("asdfasdf asdfasdf asdf asd");
+        w4.setCategory("Art");
+
+        list3.add(w3);
+        list3.add(w4);
 
 
 
-
-
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
-
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
-        }
+        poolList.add(new Pool("asdf","Health", list1));
+        poolList.add(new Pool("asdf","Science",new ArrayList<Word>()));
+        poolList.add(new Pool("asdf","Electronic",list2));
+        poolList.add(new Pool("asdf", "Art",list3));
+        poolList.add(new Pool("asdf", "Kitchen",new ArrayList<Word>()));
+        poolList.add(new Pool("adsf","Space",new ArrayList<Word>()));
+        poolList.add(new Pool("asdfadf","Computer",new ArrayList<Word>()));
     }
 
     /**

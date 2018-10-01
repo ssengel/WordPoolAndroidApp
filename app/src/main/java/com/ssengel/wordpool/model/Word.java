@@ -1,14 +1,15 @@
 package com.ssengel.wordpool.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Word {
+public class Word implements Serializable {
     private String _id;
     private String userId;
     private String eng;
     private String tr;
     private String sentence;
-    private String category;
+    private String category= "";
     private Date createdAt;
 
     public Word() {
@@ -79,16 +80,4 @@ public class Word {
         this.createdAt = createdAt;
     }
 
-    @Override
-    public String toString() {
-        return "Word{" +
-                "_id='" + _id + '\'' +
-                ", userId='" + userId + '\'' +
-                ", eng='" + eng + '\'' +
-                ", tr='" + tr + '\'' +
-                ", sentence='" + sentence + '\'' +
-                ", category='" + category + '\'' +
-                ", createdAt=" + createdAt +
-                '}';
-    }
 }

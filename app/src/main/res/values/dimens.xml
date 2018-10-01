@@ -2,6 +2,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="card_margin">15dp</dimen>
     <dimen name="card_padding">15dp</dimen>
-    <dimen name="card_radius">5dp</dimen>
+    <dimen name="card_radius">15dp</dimen>
 
 </resources>

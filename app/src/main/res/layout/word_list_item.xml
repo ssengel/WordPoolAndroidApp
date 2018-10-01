@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -11,68 +12,57 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_margin="5dp"
-        android:clickable="true"
         android:elevation="3dp"
         android:foreground="?attr/selectableItemBackground"
         card_view:cardCornerRadius="5dp">
 
-        <RelativeLayout
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp">
 
-            <RelativeLayout
-                android:id="@+id/relative"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/txtEng"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:lines="2"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="10dp"
-                    android:textColor="@color/textColorGray"
-                    android:textSize="15dp" />
-
-                <TextView
-                    android:id="@+id/txtTr"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="10dp"
-                    android:textColor="@color/textColorGray"
-                    android:textSize="15dp" />
-            </RelativeLayout>
-
+            <ImageView
+                android:src="@drawable/img_electronic"
+                android:id="@+id/imgCategory"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp" />
 
             <TextView
-                android:id="@+id/txtSentence"
-                android:layout_width="match_parent"
+                android:text="eng"
+                android:id="@+id/txtEng"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/relative"
-                android:layout_marginLeft="10dp"
-                android:gravity="left"
-                android:paddingBottom="10dp"
-                android:textColor="@color/textColorBlue"
-                android:textSize="13dp" />
+                android:layout_toRightOf="@id/imgCategory"
+                android:fontFamily="sans-serif-medium" />
+
+            <TextView
+                android:text="tr"
+                android:id="@+id/txtTr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtEng"
+                android:layout_toRightOf="@id/imgCategory" />
+            <TextView
+                android:text="sentence"
+                android:id="@+id/txtSentence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtTr"
+                android:layout_toRightOf="@id/imgCategory" />
+
             <TextView
                 android:text="time"
                 android:id="@+id/txtTime"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/txtSentence"
-                android:layout_marginRight="10dp"
-                android:gravity="right"
-                android:paddingBottom="10dp"
-                android:textColor="@color/timeColor"
-                android:textSize="13dp" />
-
+                android:layout_below="@id/txtSentence"
+                android:layout_toRightOf="@id/imgCategory" />
 
         </RelativeLayout>
 

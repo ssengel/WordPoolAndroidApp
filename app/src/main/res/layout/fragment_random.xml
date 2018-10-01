@@ -12,7 +12,6 @@
         android:id="@+id/flipView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
         app:flipDuration="300"
         app:flipEnabled="true"
         app:flipFrom="right"
@@ -20,77 +19,132 @@
         app:flipType="horizontal">
 
         <!-- Back Layout Goes Here -->
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <android.support.v7.widget.CardView
+        <android.support.v7.widget.CardView
+            android:layout_margin="@dimen/card_margin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="3dp"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/windowBackground"
+            app:cardCornerRadius="@dimen/card_radius">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="@dimen/card_margin"
-                android:elevation="3dp"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardCornerRadius="@dimen/card_radius">
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/txtTr"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center_horizontal"
-                    android:background="#FFFFFF"
-                    android:text="Sessiz"
-                    android:textSize="30dp" />
+                <RelativeLayout
+                    android:padding="20dp"
+                    android:background="@color/windowBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3">
 
-            </android.support.v7.widget.CardView>
-        </RelativeLayout>
+                    <TextView
+                        android:layout_centerInParent="true"
+                        android:id="@+id/txtTr"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tikla"
+                        android:textColor="@color/textColorGray"
+                        android:textSize="30dp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="11"
+                    android:background="#393d43">
+                    <View
+                        android:layout_alignParentTop="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:background="@color/timeColor" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
 
         <!-- Front Layout Goes Here -->
-        <RelativeLayout
+        <android.support.v7.widget.CardView
+            android:layout_margin="@dimen/card_margin"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <android.support.v7.widget.CardView
+            android:layout_height="match_parent"
+            android:elevation="3dp"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/windowBackground"
+            app:cardCornerRadius="@dimen/card_radius">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="@dimen/card_margin"
+                android:orientation="vertical">
 
-                android:elevation="3dp"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardCornerRadius="@dimen/card_radius">
-
-                <LinearLayout
-                    android:padding="@dimen/card_padding"
-                    android:layout_gravity="center"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
+                <RelativeLayout
+                    android:padding="20dp"
+                    android:background="@color/windowBackground"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent"
+                    android:layout_weight="3">
+
+                    <ImageView
+                        android:layout_centerInParent="true"
+                        android:layout_above="@+id/txtEng"
+                        android:layout_marginBottom="15dp"
+                        android:id="@+id/imgCategory"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/img_electronic" />
+
                     <TextView
-                        android:layout_marginBottom="10dp"
-                        android:textColor="@color/textColorBlue"
+
+                        android:layout_centerInParent="true"
                         android:id="@+id/txtEng"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Silence"
+                        android:text="Click ?"
+                        android:textColor="@color/textColorGray"
                         android:textSize="30dp" />
                     <View
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/line"
+                        android:layout_below="@+id/txtEng"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/cardview_shadow_start_color"/>
+                        android:background="@color/textColorGray" />
                     <TextView
-                        android:textColor="@color/textColorGray"
+                        android:layout_marginTop="15dp"
+                        android:layout_below="@id/line"
+                        android:gravity="center_horizontal"
                         android:id="@+id/txtSentence"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:text="Silence like water"
+                        android:layout_centerInParent="true"
+                        android:text="How to attack click listener to view ?"
                         android:textSize="17dp" />
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-        </RelativeLayout>
 
 
+                </RelativeLayout>
+
+                <RelativeLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="11"
+                    android:background="@color/orangeColor">
+                    <View
+                        android:layout_alignParentTop="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:background="#393d43" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
     </com.wajahatkarim3.easyflipview.EasyFlipView>
 
 
 </FrameLayout>
+
