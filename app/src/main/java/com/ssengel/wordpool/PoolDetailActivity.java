@@ -27,8 +27,6 @@ public class PoolDetailActivity extends AppCompatActivity {
 
         pool =(Pool) getIntent().getSerializableExtra("pool");
 
-
-
         init();
     }
 

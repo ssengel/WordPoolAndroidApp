@@ -15,7 +15,8 @@
         app:flipDuration="300"
         app:flipEnabled="true"
         app:flipFrom="right"
-        app:flipOnTouch="true"
+
+        android:clickable="true"
         app:flipType="horizontal">
 
         <!-- Back Layout Goes Here -->

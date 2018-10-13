@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.ssengel.wordpool.PoolDetailActivity;
 import com.ssengel.wordpool.R;
+import com.ssengel.wordpool.WordDetailActivity;
 import com.ssengel.wordpool.helper.CategoryToResorceId;
 import com.ssengel.wordpool.model.Word;
 
@@ -21,6 +22,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import maes.tech.intentanim.CustomIntent;
 
 public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.MyViewHolder> implements Filterable {
 
@@ -63,7 +66,7 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        Word word = wordListFiltered.get(position);
+        final Word word = wordListFiltered.get(position);
         Date date = word.getCreatedAt();
         int imgResorceId = CategoryToResorceId.getImageResource(word.getCategory());
 
@@ -77,6 +80,10 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.MyView
             @Override
             public void onClick(View v) {
                 //todo: Open Detail Word
+                Intent intent = new Intent(context,WordDetailActivity.class);
+                intent.putExtra("word", word);
+                context.startActivity(intent);
+                CustomIntent.customType(context,"left-to-right");
             }
         });
     }
