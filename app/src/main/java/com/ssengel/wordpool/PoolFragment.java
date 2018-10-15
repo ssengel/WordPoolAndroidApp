@@ -3,12 +3,16 @@ package com.ssengel.wordpool;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +25,7 @@ import android.widget.Toast;
 import com.ssengel.wordpool.DAO.WordDAO;
 import com.ssengel.wordpool.adapter.WordListAdapter;
 import com.ssengel.wordpool.asyncResponce.WordListCallBack;
+import com.ssengel.wordpool.helper.RecyclerItemTouchHelper;
 import com.ssengel.wordpool.model.Word;
 
 import java.util.ArrayList;
@@ -66,10 +71,13 @@ public class PoolFragment extends Fragment {
         wordListAdapter = new WordListAdapter(mWordList, getContext());
         mLayoutManager = new LinearLayoutManager(getActivity());
 
+
         recyclerView = view.findViewById(R.id.wordList);
         recyclerView.setAdapter(wordListAdapter);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
 
         fetchWords();
         return view;

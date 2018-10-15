@@ -7,7 +7,7 @@
         android:width="0.5dp"
         android:color="@color/colorPrimary" >
     </stroke>
-    <solid android:color="@color/textColorWhite"></solid>
+    <solid android:color="@color/colorWhite"></solid>
 
     <padding android:bottom="8dp"
         android:top="8dp"

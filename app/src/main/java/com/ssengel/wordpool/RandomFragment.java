@@ -74,10 +74,10 @@ public class RandomFragment extends Fragment {
         return view;
     }
     private void initListeners(){
-        flipView.setOnFlipListener(new EasyFlipView.OnFlipAnimationListener() {
+        flipView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onViewFlipCompleted(EasyFlipView easyFlipView, EasyFlipView.FlipState newCurrentSide) {
-                if(easyFlipView.isFrontSide()){
+            public void onClick(View view) {
+                if(flipView.isFrontSide()){
                     txtTr.setText(currentWord.getTr());
                 }else{
                     updateCurrentWord();
@@ -87,6 +87,19 @@ public class RandomFragment extends Fragment {
                 }
             }
         });
+//        flipView.setOnFlipListener(new EasyFlipView.OnFlipAnimationListener() {
+//            @Override
+//            public void onViewFlipCompleted(EasyFlipView easyFlipView, EasyFlipView.FlipState newCurrentSide) {
+//                if(easyFlipView.isFrontSide()){
+//                    txtTr.setText(currentWord.getTr());
+//                }else{
+//                    updateCurrentWord();
+//                    txtEng.setText(currentWord.getEng());
+//                    txtSentence.setText(currentWord.getSentence());
+//                    imgCategory.setImageResource(CategoryToResorceId.getImageResource(currentWord.getCategory()));
+//                }
+//            }
+//        });
     }
 
     private void updateCurrentWord() {

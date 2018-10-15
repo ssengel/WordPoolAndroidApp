@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="colorPrimary">#3F51B5</color>-->
-    <!--<color name="colorPrimaryDark">#303F9F</color>-->
-    <!--<color name="colorAccent">#FF4081</color>-->
-    <!--<color name="bgBottomNavigation">#fe485a</color>-->
 
-    <color name="textColorWhite">#FFFFFF</color>
-    <color name="textColorGray">#696969</color>
-    <color name="textColorBlue">#4285F4</color>
-    
-
-    <color name="timeColor">#FBBC05</color>
-    <color name="orangeColorMedium">#e7a200</color>
-    <color name="orangeColor">#e77600</color>
     <color name="colorPrimary">#4285F4</color>
     <color name="colorPrimaryDark">#164694</color>
+    <color name="colorAccent">#000000</color>
+
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorGray">#696969</color>
+    <color name="colorBlue">#4285F4</color>
+
+    <color name="timeColor">#696969</color>
+
+    <color name="orangeColorMedium">#e7a200</color>
+    <color name="orangeColor">#e77600</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
-    <color name="colorAccent">#000000</color>
+
+    <color name="item_Background">#fa315b</color>
+    <color name="eng">#535353</color>
+    <color name="tr">#696969</color>
+    <color name="sentence">#4285F4</color>
+
 </resources>

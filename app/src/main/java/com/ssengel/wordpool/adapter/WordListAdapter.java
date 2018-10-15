@@ -1,9 +1,9 @@
 package com.ssengel.wordpool.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +12,6 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ssengel.wordpool.PoolDetailActivity;
 import com.ssengel.wordpool.R;
 import com.ssengel.wordpool.WordDetailActivity;
 import com.ssengel.wordpool.helper.CategoryToResorceId;
@@ -21,9 +20,6 @@ import com.ssengel.wordpool.model.Word;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
-import maes.tech.intentanim.CustomIntent;
 
 public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.MyViewHolder> implements Filterable {
 
@@ -52,7 +48,8 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.MyView
             txtEng = (TextView) itemView.findViewById(R.id.txtEng);
             txtTr = (TextView) itemView.findViewById(R.id.txtTr);
             txtSentence = (TextView) itemView.findViewById(R.id.txtSentence);
-            txtTime = (TextView) itemView.findViewById(R.id.txtTime);
+            txtTime = (TextView) itemView.findViewById(R.id.txtDate);
+
         }
     }
 
@@ -83,7 +80,9 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.MyView
                 Intent intent = new Intent(context,WordDetailActivity.class);
                 intent.putExtra("word", word);
                 context.startActivity(intent);
-                CustomIntent.customType(context,"left-to-right");
+                Activity activity = (Activity) context;
+                activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
             }
         });
     }
@@ -124,5 +123,13 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.MyView
         };
     }
 
+    public void removeItem(int position) {
+        wordListFiltered.remove(position);
+        notifyItemRemoved(position);
+    }
 
+    public void restoreItem(Word word, int position) {
+        wordListFiltered.add(position, word);
+        notifyItemInserted(position);
+    }
 }

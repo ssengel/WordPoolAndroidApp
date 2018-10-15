@@ -12,7 +12,7 @@
         android:background="@color/orangeColor">
 
         <ImageView
-            android:id="@+id/delete_icon"
+            android:id="@+id/pool_icon"
             android:layout_width="@dimen/ic_delete"
             android:layout_height="@dimen/ic_delete"
             android:layout_alignParentRight="true"
@@ -25,8 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/padd_10"
-            android:layout_toLeftOf="@id/delete_icon"
-            android:text="Delete"
+            android:layout_toLeftOf="@id/pool_icon"
+            android:text="ADD"
             android:textColor="#fff"
             android:textSize="13dp" />
 
@@ -36,7 +36,7 @@
         android:id="@+id/view_foreground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/windowBackground"
+        android:background="@android:color/white"
         android:padding="@dimen/padd_10">
 
         <ImageView

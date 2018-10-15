@@ -1,7 +1,5 @@
 package com.ssengel.wordpool.DAO;
 
-import android.content.Context;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 
@@ -36,11 +34,12 @@ public class WordDAO {
             params.put("eng", word.getEng());
             params.put("tr", word.getTr());
             params.put("sentence", word.getSentence());
+            params.put("category", word.getCategory());
         }catch (JSONException e){
             e.printStackTrace();
         }
 
-        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, Config.getUrlWord(), params, new Response.Listener<JSONObject>() {
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, Config.URL_WORD(), params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Word word = new Gson().fromJson(response.toString(), new TypeToken<Word>(){}.getType());
@@ -66,7 +65,7 @@ public class WordDAO {
 
     public void getWords(final WordListCallBack callBack) {
 
-        JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, Config.getUrlWord(), null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, Config.URL_WORD(), null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
 

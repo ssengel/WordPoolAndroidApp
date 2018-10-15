@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.ssengel.wordpool.adapter.PoolListAdapter;
+import com.ssengel.wordpool.helper.Config;
 import com.ssengel.wordpool.helper.GridSpacingItemDecoration;
 import com.ssengel.wordpool.model.Pool;
 import com.ssengel.wordpool.model.Word;
@@ -27,7 +28,7 @@ import java.util.List;
 public class LibraryFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private ArrayList<Pool> poolList;
+    public  ArrayList<Pool> poolList;
     private PoolListAdapter poolListAdapter;
 
     public LibraryFragment() {    }
@@ -52,6 +53,7 @@ public class LibraryFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.categoryList);
         poolList = new ArrayList<>();
+        fetchCategories();// DAO' kullanildiginda callback ile herhangi bir anda fetch edilir.
         poolListAdapter = new PoolListAdapter(getActivity(), poolList);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
@@ -61,7 +63,6 @@ public class LibraryFragment extends Fragment {
         recyclerView.setAdapter(poolListAdapter);
         recyclerView.setNestedScrollingEnabled(false);
 
-        fetchCategories();
 
         return view;
     }
@@ -70,48 +71,14 @@ public class LibraryFragment extends Fragment {
 
     private void fetchCategories(){
 
+        poolList = Config.GetLocalWords();
 
-        ArrayList<Word> list1 = new ArrayList<>();
-        Word w1 = new Word();
-        w1.setEng("health");
-        w1.setTr("saglik");
-        w1.setSentence("asdfasdf asdfasdf asdf asd");
-        w1.setCategory("Health");
-        list1.add(w1);
+    }
 
-        ArrayList<Word> list2 = new ArrayList<>();
-        Word w2 = new Word();
-        w2.setEng("Electronic");
-        w2.setTr("saglik");
-        w2.setSentence("asdfasdf asdfasdf asdf asd");
-        w2.setCategory("Electronic");
-        list2.add(w2);
-
-        ArrayList<Word> list3 = new ArrayList<>();
-        Word w3 = new Word();
-        w3.setEng("Art");
-        w3.setTr("saglik");
-        w3.setSentence("asdfasdf asdfasdf asdf asd");
-        w3.setCategory("Art");
-
-        Word w4 = new Word();
-        w4.setEng("Art");
-        w4.setTr("saglik");
-        w4.setSentence("asdfasdf asdfasdf asdf asd");
-        w4.setCategory("Art");
-
-        list3.add(w3);
-        list3.add(w4);
-
-
-
-        poolList.add(new Pool("asdf","Health", list1));
-        poolList.add(new Pool("asdf","Science",new ArrayList<Word>()));
-        poolList.add(new Pool("asdf","Electronic",list2));
-        poolList.add(new Pool("asdf", "Art",list3));
-        poolList.add(new Pool("asdf", "Kitchen",new ArrayList<Word>()));
-        poolList.add(new Pool("adsf","Space",new ArrayList<Word>()));
-        poolList.add(new Pool("asdfadf","Computer",new ArrayList<Word>()));
+    @Override
+    public void onResume() {
+        super.onResume();
+        poolListAdapter.notifyDataSetChanged();
     }
 
     /**
