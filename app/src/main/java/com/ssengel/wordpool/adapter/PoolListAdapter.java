@@ -9,12 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ssengel.wordpool.PoolDetailActivity;
 import com.ssengel.wordpool.R;
 import com.ssengel.wordpool.helper.CategoryToResorceId;
-import com.ssengel.wordpool.model.Category;
 import com.ssengel.wordpool.model.Pool;
 
 import java.io.Serializable;

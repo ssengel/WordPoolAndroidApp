@@ -14,7 +14,7 @@
         android:theme="@style/MyMaterialTheme">
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="adjustNothing">
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -23,7 +23,6 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-        <activity android:name=".CreateWordActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,8 +30,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".CreateWordActivity" />
         <activity android:name=".PoolDetailActivity" />
-        <activity android:name=".WordDetailActivity"></activity>
+        <activity android:name=".WordDetailActivity" />
+        <activity
+            android:name=".EditWordActivity"
+            android:label="@string/title_activity_edit_word"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/MyMaterialTheme"></activity>
     </application>
 
 </manifest>

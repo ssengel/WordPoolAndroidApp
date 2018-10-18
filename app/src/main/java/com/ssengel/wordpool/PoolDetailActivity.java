@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ssengel.wordpool.adapter.PoolDetailAdapter;
-import com.ssengel.wordpool.adapter.WordListAdapter;
 import com.ssengel.wordpool.asyncResponce.WordObjectCallBack;
 import com.ssengel.wordpool.helper.Config;
 import com.ssengel.wordpool.helper.RecyclerItemTouchHelper;
@@ -53,7 +52,7 @@ public class PoolDetailActivity extends AppCompatActivity implements RecyclerIte
     private void init(){
 
 
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorPoolDetail);
 
         wordList = pool.getWords();
         poolDetailAdapter = new PoolDetailAdapter(getApplicationContext(), wordList);

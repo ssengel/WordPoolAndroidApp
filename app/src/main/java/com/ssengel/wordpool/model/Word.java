@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Word implements Serializable {
+
     private String _id;
     private String userId;
     private String eng;
@@ -80,4 +81,16 @@ public class Word implements Serializable {
         this.createdAt = createdAt;
     }
 
+    @Override
+    public String toString() {
+        return "Word{" +
+                "_id='" + _id + '\'' +
+                ", userId='" + userId + '\'' +
+                ", eng='" + eng + '\'' +
+                ", tr='" + tr + '\'' +
+                ", sentence='" + sentence + '\'' +
+                ", category='" + category + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

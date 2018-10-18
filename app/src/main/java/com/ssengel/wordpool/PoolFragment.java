@@ -115,9 +115,16 @@ public class PoolFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_createWord) {
             startActivity(new Intent(getContext(), CreateWordActivity.class));
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchWords();
     }
 
     private void fetchWords() {
