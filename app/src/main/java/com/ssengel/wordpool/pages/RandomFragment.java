@@ -1,6 +1,7 @@
-package com.ssengel.wordpool;
+package com.ssengel.wordpool.pages;
 
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,8 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ssengel.wordpool.DAO.WordDAO;
-import com.ssengel.wordpool.asyncResponce.WordListCallBack;
+import com.ssengel.wordpool.LocalDAO.WordRepo;
+import com.ssengel.wordpool.R;
 import com.ssengel.wordpool.helper.CategoryToResorceId;
+import com.ssengel.wordpool.helper.Config;
 import com.ssengel.wordpool.model.Word;
 import com.wajahatkarim3.easyflipview.EasyFlipView;
 
@@ -33,7 +36,9 @@ public class RandomFragment extends Fragment {
     private Word currentWord;
     private WordDAO wordDAO;
     private ArrayList<Word> wordList;
-    Random generator = new Random();
+    private Random generator = new Random();
+
+    private WordRepo wordRepo;
 
 
     public RandomFragment() {
@@ -67,8 +72,9 @@ public class RandomFragment extends Fragment {
         pDialog.setCancelable(false);
 
         wordDAO = new WordDAO();
+        wordRepo = new WordRepo(getContext());
 
-        fetchData();
+        new getAllWords().execute();
         initListeners();
 
         return view;
@@ -78,14 +84,17 @@ public class RandomFragment extends Fragment {
         flipView.setOnFlipListener(new EasyFlipView.OnFlipAnimationListener() {
             @Override
             public void onViewFlipCompleted(EasyFlipView easyFlipView, EasyFlipView.FlipState newCurrentSide) {
-                if(easyFlipView.isFrontSide()){
-                    txtTr.setText(currentWord.getTr());
-                }else{
-                    updateCurrentWord();
-                    txtEng.setText(currentWord.getEng());
-                    txtSentence.setText(currentWord.getSentence());
-                    imgCategory.setImageResource(CategoryToResorceId.getImageResource(currentWord.getCategory()));
+                if(wordList != null){
+                    if(easyFlipView.isFrontSide()){
+                        txtTr.setText(currentWord.getTr());
+                    }else{
+                        updateCurrentWord();
+                        txtEng.setText(currentWord.getEng());
+                        txtSentence.setText(currentWord.getSentence());
+                        imgCategory.setImageResource(CategoryToResorceId.getImageResource(currentWord.getCategory()));
+                    }
                 }
+
             }
         });
     }
@@ -96,17 +105,35 @@ public class RandomFragment extends Fragment {
     }
 
     private void fetchData(){
-        wordDAO.getWords(new WordListCallBack() {
+        wordDAO.getWords(new WordDAO.WordListCallback() {
             @Override
-            public void processFinish(List list) {
+            public void successful(List list) {
                 wordList = (ArrayList<Word>) list;
             }
 
             @Override
-            public void responseError(Error error) {
+            public void fail(Error error) {
                 Toast.makeText(getContext(),"Couldn't fetch the words..",Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    private class getAllWords extends AsyncTask<String, Void, List<Word>> {
+
+        @Override
+        protected List<Word> doInBackground(String... strings) {
+            try {
+                return wordRepo.getAllWords();
+            }catch (Exception e){
+                Toast.makeText(getContext(), ""+ e, Toast.LENGTH_LONG).show();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<Word> words) {
+            Toast.makeText(getContext(), words.toString(),Toast.LENGTH_LONG).show();
+            wordList = (ArrayList<Word>) words;
+        }
     }
 
 

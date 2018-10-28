@@ -22,6 +22,9 @@
         <item>Art</item>
         <item>Science</item>
     </string-array>
+
+    <string name="noNetCon">No internet connection detected.</string>
+    <string name="exampleSentence">Build a better app and leave the operations to us.</string>
     <string name="title_activity_edit_word">EditWordActivity</string>
 
 </resources>

@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ssengel.wordpool.PoolDetailActivity;
 import com.ssengel.wordpool.R;
 import com.ssengel.wordpool.helper.CategoryToResorceId;
 import com.ssengel.wordpool.model.Pool;
+import com.ssengel.wordpool.pages.PoolDetailActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,7 +33,6 @@ public class PoolListAdapter extends  RecyclerView.Adapter<PoolListAdapter.MyVie
 
         public TextView txtCategory;
         public ImageView imgCategory;
-        public TextView txtWordCount;
         public View view;
 
         public  MyViewHolder(View view) {
@@ -42,7 +41,6 @@ public class PoolListAdapter extends  RecyclerView.Adapter<PoolListAdapter.MyVie
 
             txtCategory = view.findViewById(R.id.txtCategory);
             imgCategory = view.findViewById(R.id.imgCategory);
-            txtWordCount = view.findViewById(R.id.txtWordCount);
         }
     }
 
@@ -59,14 +57,14 @@ public class PoolListAdapter extends  RecyclerView.Adapter<PoolListAdapter.MyVie
         int imgResource = CategoryToResorceId.getImageResource(pool.getName());
 
         holder.txtCategory.setText(pool.getName());
-        holder.txtWordCount.setText(pool.getWords().size() + "");
         holder.imgCategory.setImageResource(imgResource);
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent poolDetailIntent = new Intent(context, PoolDetailActivity.class);
-                poolDetailIntent.putExtra("pool", (Serializable) pool);
+                poolDetailIntent.putExtra("poolId", pool.get_id());
+                poolDetailIntent.putExtra("poolName", pool.getName());
                 context.startActivity(poolDetailIntent);
             }
         });

@@ -1,10 +1,15 @@
 package com.ssengel.wordpool.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.Date;
-
+@Entity
 public class Word implements Serializable {
-
+    @NonNull
+    @PrimaryKey
     private String _id;
     private String userId;
     private String eng;
@@ -12,18 +17,6 @@ public class Word implements Serializable {
     private String sentence;
     private String category= "";
     private Date createdAt;
-
-    public Word() {
-    }
-
-    public Word(String _id, String userId, String eng, String tr, String sentence,String category, Date createdAt) {
-        this._id = _id;
-        this.userId = userId;
-        this.eng = eng;
-        this.tr = tr;
-        this.sentence = sentence;
-        this.category = category;
-    }
 
     public String get_id() {
         return _id;

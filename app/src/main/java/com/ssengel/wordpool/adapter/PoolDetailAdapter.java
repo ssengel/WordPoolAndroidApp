@@ -11,10 +11,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ssengel.wordpool.DAO.WordDAO;
-import com.ssengel.wordpool.LibraryFragment;
 import com.ssengel.wordpool.R;
-import com.ssengel.wordpool.asyncResponce.WordObjectCallBack;
 import com.ssengel.wordpool.helper.CategoryToResorceId;
+import com.ssengel.wordpool.model.PWord;
 import com.ssengel.wordpool.model.Word;
 
 import java.util.ArrayList;
@@ -22,12 +21,16 @@ import java.util.ArrayList;
 public class PoolDetailAdapter extends RecyclerView.Adapter<PoolDetailAdapter.MyViewHolder>{
 
     private Context context;
-    private ArrayList<Word> wordList;
+    private ArrayList<PWord> pWordList;
     private WordDAO wordDAO = new WordDAO();
+    private String poolName;
+    private int imgResorceId;
 
-    public PoolDetailAdapter(Context context, ArrayList<Word> wordList) {
+    public PoolDetailAdapter(Context context, ArrayList<PWord> pWordList, String poolName) {
         this.context = context;
-        this.wordList = wordList;
+        this.pWordList = pWordList;
+        this.poolName = poolName;
+        this.imgResorceId = CategoryToResorceId.getImageResource(poolName);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -36,7 +39,7 @@ public class PoolDetailAdapter extends RecyclerView.Adapter<PoolDetailAdapter.My
         public TextView txtEng;
         public TextView txtTr;
         public TextView txtSentence;
-        public TextView txtTime;
+        public TextView txtDate;
         public View view;
         public RelativeLayout viewBackground;
         public RelativeLayout viewForeground;
@@ -49,7 +52,7 @@ public class PoolDetailAdapter extends RecyclerView.Adapter<PoolDetailAdapter.My
             txtEng = (TextView) view.findViewById(R.id.txtEng);
             txtTr = (TextView) view.findViewById(R.id.txtTr);
             txtSentence = (TextView) view.findViewById(R.id.txtSentence);
-            txtTime = (TextView) view.findViewById(R.id.txtDate);
+            txtDate = (TextView) view.findViewById(R.id.txtDate);
 
             viewBackground = view.findViewById(R.id.view_background);
             viewForeground = view.findViewById(R.id.view_foreground);
@@ -65,36 +68,42 @@ public class PoolDetailAdapter extends RecyclerView.Adapter<PoolDetailAdapter.My
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        Word word = wordList.get(position);
-        int imgResorceId = CategoryToResorceId.getImageResource(word.getCategory());
+        PWord pWord = pWordList.get(position);
 
         holder.imgCategory.setImageResource(imgResorceId);
-        holder.txtEng.setText(word.getEng());
-        holder.txtTr.setText(word.getTr());
-        holder.txtSentence.setText(word.getSentence());
-//        holder.txtTime.setText(new SimpleDateFormat("d-MM-yyy").format(date));
+        holder.txtEng.setText(pWord.getEng());
+        holder.txtTr.setText(pWord.getTr());
+        holder.txtSentence.setText(pWord.getSentence());
+//        holder.txtDate.setText(new SimpleDateFormat("d-MM-yyy").format(date));
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo: Open Detail Word
+                //todo: Open Detail PWord
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return wordList.size();
+        return pWordList.size();
     }
 
-    public void removeItem(int position, WordObjectCallBack callback) {
-        wordDAO.createWord(wordList.get(position), callback);
-        wordList.remove(position);
+    public void removeItem(int position, WordDAO.WordObjectCallback callback) {
+        PWord pWord = pWordList.get(position);
+        Word word = new Word();
+        word.setEng(pWord.getEng());
+        word.setTr(pWord.getTr());
+        word.setSentence(pWord.getSentence());
+        word.setCategory(poolName);
+
+        wordDAO.createWord(word,callback);
+        pWordList.remove(position);
         notifyItemRemoved(position);
     }
 
-    public void restoreItem(Word word, int position) {
-        wordList.add(position, word);
+    public void restoreItem(PWord pWord, int position) {
+        pWordList.add(position, pWord);
         notifyItemInserted(position);
     }
 }

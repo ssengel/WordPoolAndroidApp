@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:clickable="true"
     android:layout_marginBottom="55dp"
-    tools:context=".RandomFragment">
+    tools:context=".pages.RandomFragment">
 
 
     <com.wajahatkarim3.easyflipview.EasyFlipView

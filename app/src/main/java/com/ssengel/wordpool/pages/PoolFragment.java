@@ -1,19 +1,18 @@
-package com.ssengel.wordpool;
+package com.ssengel.wordpool.pages;
 
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,27 +22,38 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.ssengel.wordpool.DAO.WordDAO;
+import com.ssengel.wordpool.LocalDAO.OperationRepo;
+import com.ssengel.wordpool.LocalDAO.WordRepo;
+import com.ssengel.wordpool.R;
 import com.ssengel.wordpool.adapter.WordListAdapter;
-import com.ssengel.wordpool.asyncResponce.WordListCallBack;
-import com.ssengel.wordpool.helper.RecyclerItemTouchHelper;
+import com.ssengel.wordpool.helper.Config;
+import com.ssengel.wordpool.model.Operation;
 import com.ssengel.wordpool.model.Word;
+import com.ssengel.wordpool.syncronization.Sync;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import static com.ssengel.wordpool.pages.MainActivity.isInternetAvailable;
 
 public class PoolFragment extends Fragment {
 
     private static final String TAG = "PoolFragment";
 
-    private RecyclerView recyclerView;
     private WordDAO wordDAO;
+    private WordRepo wordRepo;
+    private OperationRepo operationRepo;
+
+    private RecyclerView recyclerView;
     private ArrayList<Word> mWordList;
     private WordListAdapter wordListAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private SearchView searchView;
+    private ProgressDialog pDialog;
 
-
+    BottomNavigationView bottomNavigationView;
 
     public PoolFragment() {
     }
@@ -67,6 +77,10 @@ public class PoolFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_pool, container, false);
         wordDAO = new WordDAO();
+        wordRepo = new WordRepo(getContext());
+        operationRepo = new OperationRepo(getContext());
+
+        pDialog = new ProgressDialog(getContext());
         mWordList = new ArrayList<>();
         wordListAdapter = new WordListAdapter(mWordList, getContext());
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -77,9 +91,9 @@ public class PoolFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        bottomNavigationView = getActivity().findViewById(R.id.navigation);
 
-
-        fetchWords();
+//        new getAllWords().execute();
         return view;
     }
 
@@ -117,6 +131,9 @@ public class PoolFragment extends Fragment {
             startActivity(new Intent(getContext(), CreateWordActivity.class));
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
+        if(id == R.id.action_sync){
+            sync();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -124,24 +141,47 @@ public class PoolFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        fetchWords();
+        new getAllWords().execute();//todo !!! bottom navigation da basilinca 2 kez fetch problemi
     }
 
-    private void fetchWords() {
-        wordDAO.getWords(new WordListCallBack() {
-            @Override
-            public void processFinish(List list) {
-                Collections.reverse(list);
+
+    private void sync(){
+        if(isInternetAvailable(getContext())){
+            Sync sync = new Sync(getContext(), new Sync.CustomCallback() {
+                @Override
+                public void successful() {
+                    new getAllWords().execute();
+                }
+            });
+            sync.execute();
+
+        }else{
+            new MainActivity.showMessage().execute("no internet connection !");
+        }
+    }
+
+
+
+    private class getAllWords extends AsyncTask<Void, Void, List<Word>> {
+        @Override
+        protected List<Word> doInBackground(Void... voids) {
+            try {
+                return wordRepo.getAllWords();
+            }catch (Exception e){
+                new MainActivity.showMessage().execute(e.toString());
+                return null;
+            }
+        }
+        @Override
+        protected void onPostExecute(List<Word> words) {
+            if(words!= null){
+                Collections.reverse(words);
                 mWordList.clear();
-                mWordList.addAll(list);
+                mWordList.addAll(words);
                 wordListAdapter.notifyDataSetChanged();
             }
-
-            @Override
-            public void responseError(Error error) {
-                Toast.makeText(getActivity(), "Could not fetch the word items.\n" + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        }
     }
+
 
 }

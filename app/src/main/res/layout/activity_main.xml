@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
-    android:id="@+id/coordinatorPoolDetail"
+    android:id="@+id/coordinatorMain"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".pages.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -38,6 +38,12 @@
         app:itemIconTint="@color/bottom_navigation_foreground"
         app:itemTextColor="@color/bottom_navigation_foreground"
         app:menu="@menu/navigation" />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/placeSnackBar"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

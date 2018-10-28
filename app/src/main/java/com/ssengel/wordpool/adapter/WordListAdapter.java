@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ssengel.wordpool.R;
-import com.ssengel.wordpool.WordDetailActivity;
+import com.ssengel.wordpool.pages.WordDetailActivity;
 import com.ssengel.wordpool.helper.CategoryToResorceId;
 import com.ssengel.wordpool.model.Word;
 
@@ -78,7 +78,7 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.MyView
             public void onClick(View v) {
                 //todo: Open Detail Word
                 Intent intent = new Intent(context,WordDetailActivity.class);
-                intent.putExtra("word", word);
+                intent.putExtra("wordId", word.get_id());
                 context.startActivity(intent);
                 Activity activity = (Activity) context;
                 activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

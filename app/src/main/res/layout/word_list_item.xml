@@ -2,8 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_list_item"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:foreground="?attr/selectableItemBackground">
 
     <RelativeLayout
         android:id="@+id/view_background"
@@ -17,7 +17,7 @@
             android:layout_height="@dimen/ic_delete"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/padd_10"
+            android:layout_marginRight="5dp"
             android:src="@drawable/ic_pool_white_24" />
 
         <TextView
@@ -37,7 +37,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/windowBackground"
-        android:padding="@dimen/padd_10">
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <ImageView
             android:id="@+id/imgCategory"
@@ -48,10 +51,10 @@
 
         <TextView
             android:id="@+id/txtEng"
+            android:text="Hello"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/imgCategory"
-            android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
             android:textColor="@color/eng"
@@ -59,23 +62,32 @@
 
         <TextView
             android:id="@+id/txtTr"
+            android:layout_below="@id/txtEng"
+            android:layout_toRightOf="@id/imgCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txtEng"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@id/imgCategory"
+            android:text="Merhaba"
             android:textColor="@color/tr"
-            android:textSize="12dp" />
+            android:textSize="14dp" />
         <TextView
             android:id="@+id/txtSentence"
+            android:text="@string/exampleSentence"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txtTr"
-            android:maxLines="2"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@id/imgCategory"
             android:textColor="@color/sentence"
             android:textSize="12dp" />
+
+        <!--<View-->
+            <!--android:id="@+id/line"-->
+            <!--android:layout_marginTop="1dp"-->
+            <!--android:layout_toRightOf="@id/imgCategory"-->
+            <!--android:layout_below="@+id/txtSentence"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="@color/itemLine" />-->
 
         <TextView
             android:id="@+id/txtDate"
@@ -83,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:textColor="@color/timeColor"
+            android:textColor="@color/dateColor"
             android:textStyle="bold" />
 
     </RelativeLayout>

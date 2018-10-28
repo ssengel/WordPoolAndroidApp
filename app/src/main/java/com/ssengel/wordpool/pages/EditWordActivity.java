@@ -1,10 +1,9 @@
-package com.ssengel.wordpool;
+package com.ssengel.wordpool.pages;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
@@ -14,13 +13,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ssengel.wordpool.DAO.WordDAO;
-import com.ssengel.wordpool.asyncResponce.WordObjectCallBack;
-import com.ssengel.wordpool.helper.CategoryToResorceId;
+import com.ssengel.wordpool.R;
 import com.ssengel.wordpool.model.Word;
 
 public class EditWordActivity extends AppCompatActivity {
@@ -82,22 +77,22 @@ public class EditWordActivity extends AppCompatActivity {
                 showDialog();
 
                 Word mWord = new Word();
-                mWord.set_id(word.get_id() +1 );
+                mWord.set_id(word.get_id());
                 mWord.setEng(edtEng.getText().toString());
                 mWord.setTr(edtTr.getText().toString());
                 mWord.setSentence(edtSentence.getText().toString());
                 mWord.setCategory(sprCategory.getSelectedItem().toString());
 
 
-                wordDAO.updateWord(mWord, new WordObjectCallBack() {
+                wordDAO.updateWord(mWord, new WordDAO.WordObjectCallback() {
                     @Override
-                    public void processFinish(Word word) {
+                    public void successful(Word word) {
                         hideDialog();
                         finish();
                     }
 
                     @Override
-                    public void responseError(Error error) {
+                    public void fail(Error error) {
                         Snackbar.make(coordinatorEditWord, error.toString(),Snackbar.LENGTH_LONG).show();
                         hideDialog();
                     }

@@ -1,26 +1,21 @@
 package com.ssengel.wordpool.DAO;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ssengel.wordpool.helper.Config;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.ssengel.wordpool.asyncResponce.AuthServiceCallBack;
 import com.ssengel.wordpool.helper.MyVolley;
 
 import static android.content.ContentValues.TAG;
 
 public class AuthDAO {
 
-    public void login(String email, String password, final AuthServiceCallBack callBack) {
+    public void login(String email, String password, final AuthCallback callBack) {
 
         JSONObject jsonObject = new JSONObject();
         try {
@@ -34,9 +29,9 @@ public class AuthDAO {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    Config.TOKEN = response.getString("token");
-                    Config.USER_ID = response.getJSONObject("user").getString("_id");
-                    callBack.processFinished();
+                    String token = response.getString("token");
+                    String userId = response.getJSONObject("user").getString("_id");
+                    callBack.successful(userId, token);
                 } catch (JSONException e) {
                     Log.e(TAG, "onResponse: "+ e.toString());
                 }
@@ -44,10 +39,15 @@ public class AuthDAO {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                callBack.responseError(error);
+                callBack.fail(new Error(error));
             }
         });
 
         MyVolley.getInstance().addToRequestQueue(objectRequest);
+    }
+
+    public interface AuthCallback{
+        void successful(String userId, String token);
+        void fail(Error err);
     }
 }

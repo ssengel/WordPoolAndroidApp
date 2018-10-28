@@ -9,9 +9,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.ssengel.wordpool.asyncResponce.WordObjectCallBack;
 import com.ssengel.wordpool.helper.Config;
-import com.ssengel.wordpool.asyncResponce.WordListCallBack;
 import com.ssengel.wordpool.helper.MyVolley;
 import com.ssengel.wordpool.model.Word;
 
@@ -28,7 +26,7 @@ public class WordDAO {
 
     private ArrayList<Word> mWordList;
 
-    public void updateWord(Word word, final WordObjectCallBack callBack){
+    public void updateWord(Word word, final WordObjectCallback callBack){
         JSONObject params = new JSONObject();
         try {
             params.put("eng", word.getEng());
@@ -43,12 +41,12 @@ public class WordDAO {
             @Override
             public void onResponse(JSONObject response) {
                 Word word = new Gson().fromJson(response.toString(), new TypeToken<Word>(){}.getType());
-                callBack.processFinish(word);
+                callBack.successful(word);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                callBack.responseError(new Error(error));
+                callBack.fail(new Error(error));
             }
         }){
             @Override
@@ -63,17 +61,17 @@ public class WordDAO {
         MyVolley.getInstance().addToRequestQueue(req);
     }
 
-    public void getWord(String id, final WordObjectCallBack callBack){
+    public void getWord(String id, final WordObjectCallback callBack){
         JsonObjectRequest deleteRequest = new JsonObjectRequest(Request.Method.GET, Config.URL_WORD() + id, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Word word = new Gson().fromJson(response.toString(), new TypeToken<Word>(){}.getType());
-                callBack.processFinish(word);
+                callBack.successful(word);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                callBack.responseError(new Error(error));
+                callBack.fail(new Error(error));
             }
         }){
             @Override
@@ -87,16 +85,16 @@ public class WordDAO {
         MyVolley.getInstance().addToRequestQueue(deleteRequest);
     }
 
-    public void deleteWord(String _id, final WordObjectCallBack callBack){
+    public void deleteWord(String _id, final WordObjectCallback callBack){
         JsonObjectRequest deleteRequest = new JsonObjectRequest(Request.Method.DELETE, Config.URL_WORD() + _id, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                callBack.processFinish(null);
+                callBack.successful(null);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                callBack.responseError(new Error(error));
+                callBack.fail(new Error(error));
             }
         }){
             @Override
@@ -110,7 +108,7 @@ public class WordDAO {
         MyVolley.getInstance().addToRequestQueue(deleteRequest);
     }
 
-    public void createWord(Word word, final WordObjectCallBack callBack){
+    public void createWord(Word word, final WordObjectCallback callBack){
         JSONObject params = new JSONObject();
         try {
             params.put("eng", word.getEng());
@@ -125,12 +123,12 @@ public class WordDAO {
             @Override
             public void onResponse(JSONObject response) {
                 Word word = new Gson().fromJson(response.toString(), new TypeToken<Word>(){}.getType());
-                callBack.processFinish(word);
+                callBack.successful(word);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                callBack.responseError(new Error(error));
+                callBack.fail(new Error(error));
             }
         }){
             @Override
@@ -145,19 +143,19 @@ public class WordDAO {
         MyVolley.getInstance().addToRequestQueue(req);
     }
 
-    public void getWords(final WordListCallBack callBack) {
+    public void getWords(final WordListCallback callBack) {
 
         JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, Config.URL_WORD(), null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
 
                 List<Word> mWordList = new Gson().fromJson(response.toString(), new TypeToken<List<Word>>(){}.getType());
-                callBack.processFinish(mWordList);
+                callBack.successful(mWordList);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                callBack.responseError(new Error(error));
+                callBack.fail(new Error(error));
             }
         }) {
             @Override
@@ -171,5 +169,14 @@ public class WordDAO {
         MyVolley.getInstance().addToRequestQueue(arrayRequest);
     }
 
+    public interface WordListCallback {
+        void successful(List list);
+        void fail(Error error);
+    }
+
+    public interface WordObjectCallback {
+        void successful(Word word);
+        void fail(Error error);
+    }
 
 }

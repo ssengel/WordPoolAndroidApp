@@ -1,30 +1,37 @@
-package com.ssengel.wordpool;
+package com.ssengel.wordpool.pages;
 
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ssengel.wordpool.DAO.WordDAO;
-import com.ssengel.wordpool.asyncResponce.WordObjectCallBack;
+import com.ssengel.wordpool.LocalDAO.OperationRepo;
+import com.ssengel.wordpool.LocalDAO.WordRepo;
+import com.ssengel.wordpool.R;
 import com.ssengel.wordpool.helper.CategoryToResorceId;
+import com.ssengel.wordpool.model.Operation;
 import com.ssengel.wordpool.model.Word;
 
 
 public class WordDetailActivity extends AppCompatActivity {
 
-    private Word word;
+    private String wordId;
+    private Word globalWord;
     private WordDAO wordDAO = new WordDAO();
+    private WordRepo wordRepo;
+    private OperationRepo operationRepo;
 
     private CoordinatorLayout coordinatorWordDetail;
     private ImageView imgCategory;
@@ -41,16 +48,44 @@ public class WordDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_detail);
 
+        wordRepo = new WordRepo(getApplicationContext());
+        operationRepo = new OperationRepo(getApplicationContext());
 
-        word = (Word) getIntent().getExtras().get("word");
+
+        wordId = getIntent().getStringExtra("wordId");
+
+        new GetWordFromLocal().execute(wordId);
+
         initViews();
-        setFields();
+
 
         //toolbar
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+    }
+
+    private class GetWordFromLocal extends AsyncTask<String, Void,Word>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Word doInBackground(String... ids) {
+
+            Log.e("doInBack" , ids[0]);
+            Word word = wordRepo.getWordById(ids[0]);
+            return word;
+        }
+
+        @Override
+        protected void onPostExecute(Word word) {
+            globalWord = word;
+            setFields(word);
+        }
     }
 
     private void initViews(){
@@ -67,7 +102,8 @@ public class WordDetailActivity extends AppCompatActivity {
 
     }
 
-    private void setFields(){
+    private void setFields(Word word){
+        ((TextView)findViewById(R.id.wordId)).setText(word.get_id());
         imgCategory.setImageResource(CategoryToResorceId.getImageResource(word.getCategory()));
         txtEng.setText(word.getEng());
         txtTr.setText(word.getTr());
@@ -99,7 +135,7 @@ public class WordDetailActivity extends AppCompatActivity {
             finish(); // close this activity and return to preview activity (if there is any)
         }if(item.getItemId() == R.id.action_edit){
             Intent intent = new Intent(getApplicationContext(), EditWordActivity.class);
-            intent.putExtra("word", word);
+            intent.putExtra("word", globalWord);
             startActivity(intent);
         }if(item.getItemId() == R.id.action_delete){
             alert.show();
@@ -116,7 +152,7 @@ public class WordDetailActivity extends AppCompatActivity {
 
             public void onClick(DialogInterface dialog, int which) {
 
-                deleteWord(word.get_id());
+                deleteWordFromLocal(wordId);
                 dialog.dismiss();
             }
         });
@@ -132,17 +168,26 @@ public class WordDetailActivity extends AppCompatActivity {
 
     }
 
-    private void deleteWord(String id){
-            wordDAO.deleteWord(id+1, new WordObjectCallBack() {
-                @Override
-                public void processFinish(Word word) {
+    private void deleteWordFromLocal(final String wordId){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    wordRepo.deleteWord(wordId);
+                    operationRepo.deleteOperationsByWordId(wordId);
+                    if(wordId.length()> 13) {//web e senkron edilmis ise
+                        Operation operation = new Operation();
+                        operation.setWordId(wordId);
+                        operation.setType("delete");
+                        operationRepo.insertOperation(operation);
+                    }
+
                     finish();
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
-                @Override
-                public void responseError(Error error) {
-                    Snackbar.make(coordinatorWordDetail, error.toString(), Snackbar.LENGTH_LONG).show();
-                }
-            });
+            }
+        }).start();
     }
 
 

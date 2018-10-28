@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.ssengel.wordpool.MainActivity">
+    tools:context="com.ssengel.wordpool.pages.MainActivity">
 
     <item
         android:id="@+id/action_settings"
@@ -11,11 +11,18 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_sync"
+        android:title="Sync"
+        android:orderInCategory="300"
+        android:icon="@android:drawable/stat_notify_sync"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/action_createWord"
         android:title="Create Word"
         android:orderInCategory="300"
         android:icon="@drawable/ic_create_white_24dp"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_search"

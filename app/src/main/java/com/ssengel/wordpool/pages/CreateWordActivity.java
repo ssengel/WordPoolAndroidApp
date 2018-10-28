@@ -1,15 +1,13 @@
-package com.ssengel.wordpool;
+package com.ssengel.wordpool.pages;
 
 import android.content.Context;
-import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -17,8 +15,15 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ssengel.wordpool.DAO.WordDAO;
-import com.ssengel.wordpool.asyncResponce.WordObjectCallBack;
+import com.ssengel.wordpool.LocalDAO.OperationRepo;
+import com.ssengel.wordpool.LocalDAO.WordRepo;
+import com.ssengel.wordpool.R;
+import com.ssengel.wordpool.helper.Config;
+import com.ssengel.wordpool.model.Operation;
 import com.ssengel.wordpool.model.Word;
+
+import java.util.Date;
+import java.util.List;
 
 public class CreateWordActivity extends AppCompatActivity {
 
@@ -30,6 +35,8 @@ public class CreateWordActivity extends AppCompatActivity {
     private EditText edtSentence;
 
     private WordDAO wordDAO= new WordDAO();
+    private WordRepo wordRepo;
+    private OperationRepo operationRepo;
 
     private void initViews(){
 
@@ -40,34 +47,48 @@ public class CreateWordActivity extends AppCompatActivity {
         edtTr = (EditText) findViewById(R.id.edtTr);
         edtSentence = (EditText) findViewById(R.id.edtSentence);
 
+        wordRepo = new WordRepo(getApplicationContext());
+        operationRepo = new OperationRepo(getApplicationContext());
     }
 
     private void initListeners(){
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
+            Word word = new Word();
+            word.setEng(edtEng.getText().toString());
+            word.setTr(edtTr.getText().toString());
+            word.setSentence(edtSentence.getText().toString());
+            word.setCategory(sprCategory.getSelectedItem().toString());
 
-                Word word = new Word();
-                word.setEng(edtEng.getText().toString());
-                word.setTr(edtTr.getText().toString());
-                word.setSentence(edtSentence.getText().toString());
-                word.setCategory(sprCategory.getSelectedItem().toString());
-
-                wordDAO.createWord(word, new WordObjectCallBack() {
-                    @Override
-                    public void processFinish(Word word) {
-                        finish();
-                        Toast.makeText(getApplicationContext(),"Created new word.",Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void responseError(Error error) {
-                        closeKeyboard();
-                        Snackbar.make(view, "Couldn't created word !!\n" + error.toString(),Snackbar.LENGTH_LONG).show();
-                    }
-                });
+            new insertWord().execute(word);
             }
         });
+    }
+
+    private class insertWord extends AsyncTask<Word, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Word... words) {
+            try {
+                closeKeyboard();
+                wordRepo.insertWord(words[0]);
+                Operation op = new Operation();
+                op.setWordId(words[0].get_id());
+                op.setType("insert");
+                operationRepo.insertOperation(op);
+
+//                if (MainActivity.isInternetAvailable(getApplicationContext())){
+//                    wordDAO.createWord();
+//                }
+                finish();
+
+            }catch (Exception e){
+                Snackbar.make(findViewById(R.id.coordinatorCreateWord), e.toString(),Snackbar.LENGTH_LONG).show();
+            }
+            return null;
+        }
+
     }
 
     private void closeKeyboard(){

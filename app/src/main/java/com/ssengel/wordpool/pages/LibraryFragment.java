@@ -1,9 +1,13 @@
-package com.ssengel.wordpool;
+package com.ssengel.wordpool.pages;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,22 +18,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.ssengel.wordpool.DAO.PoolDAO;
+import com.ssengel.wordpool.LocalDAO.PWordRepo;
+import com.ssengel.wordpool.LocalDAO.PoolRepo;
+import com.ssengel.wordpool.R;
 import com.ssengel.wordpool.adapter.PoolListAdapter;
 import com.ssengel.wordpool.helper.Config;
 import com.ssengel.wordpool.helper.GridSpacingItemDecoration;
+import com.ssengel.wordpool.model.PWord;
 import com.ssengel.wordpool.model.Pool;
-import com.ssengel.wordpool.model.Word;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
 public class LibraryFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    public  ArrayList<Pool> poolList;
+    private ArrayList<Pool> poolList;
     private PoolListAdapter poolListAdapter;
+    private PoolDAO poolDAO = new PoolDAO();
+    private PoolRepo poolRepo;
+    private PWordRepo pWordRepo;
+    private SharedPreferences sharedPref;
+
 
     public LibraryFragment() {    }
 
@@ -48,12 +60,16 @@ public class LibraryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_library, container, false);
+
+        poolRepo = new PoolRepo(getContext());
+        pWordRepo = new PWordRepo(getContext());
+//        sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+
 
         recyclerView = view.findViewById(R.id.categoryList);
         poolList = new ArrayList<>();
-        fetchCategories();// DAO' kullanildiginda callback ile herhangi bir anda fetch edilir.
         poolListAdapter = new PoolListAdapter(getActivity(), poolList);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
@@ -63,27 +79,59 @@ public class LibraryFragment extends Fragment {
         recyclerView.setAdapter(poolListAdapter);
         recyclerView.setNestedScrollingEnabled(false);
 
+        new GetPoolsFromLocal().execute();
 
         return view;
     }
 
 
 
-    private void fetchCategories(){
+//    private void checkIsLocalPoolExist(){
+//        Boolean state = getLocalPoolState();
+//        if(!state){
+//            getPools();
+//        }else {
+//            new GetPoolsFromLocal().execute();
+//        }
+//
+//    }
+//    private boolean getLocalPoolState(){
+//        Boolean state = sharedPref.getBoolean(Config.IS_LOCAL_POOL_KEY,false);
+//        return state;
+//    }
+//    private void setLocalPoolState(boolean state){
+//        SharedPreferences.Editor editor = sharedPref.edit();
+//        editor.putBoolean(Config.IS_LOCAL_POOL_KEY, state);
+//        editor.commit();
+//    }
 
-        poolList = Config.GetLocalWords();
 
+    private class GetPoolsFromLocal extends AsyncTask<Void, Void, List<Pool>>{
+
+        @Override
+        protected List<Pool> doInBackground(Void... voids) {
+            try{
+                return poolRepo.getAllPools();
+            }catch (Exception e){
+                new MainActivity.showMessage().execute(e.toString());
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<Pool> pools) {
+            poolList.clear();
+            poolList.addAll(pools);
+            poolListAdapter.notifyDataSetChanged();
+        }
     }
+
 
     @Override
     public void onResume() {
         super.onResume();
-        poolListAdapter.notifyDataSetChanged();
     }
 
-    /**
-     * Converting dp to pixel
-     */
     private int dpToPx(int dp) {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
