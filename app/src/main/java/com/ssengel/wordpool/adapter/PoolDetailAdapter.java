@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.ssengel.wordpool.DAO.WordDAO;
+import com.ssengel.wordpool.globalDAO.WordDAO;
 import com.ssengel.wordpool.R;
 import com.ssengel.wordpool.helper.CategoryToResorceId;
 import com.ssengel.wordpool.model.PWord;

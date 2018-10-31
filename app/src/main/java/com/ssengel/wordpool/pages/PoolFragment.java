@@ -12,29 +12,24 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.ssengel.wordpool.DAO.WordDAO;
+import com.ssengel.wordpool.globalDAO.WordDAO;
 import com.ssengel.wordpool.LocalDAO.OperationRepo;
 import com.ssengel.wordpool.LocalDAO.WordRepo;
 import com.ssengel.wordpool.R;
 import com.ssengel.wordpool.adapter.WordListAdapter;
-import com.ssengel.wordpool.helper.Config;
-import com.ssengel.wordpool.model.Operation;
 import com.ssengel.wordpool.model.Word;
 import com.ssengel.wordpool.syncronization.Sync;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import static com.ssengel.wordpool.pages.MainActivity.isInternetAvailable;
 
@@ -93,7 +88,6 @@ public class PoolFragment extends Fragment {
 
         bottomNavigationView = getActivity().findViewById(R.id.navigation);
 
-//        new getAllWords().execute();
         return view;
     }
 
@@ -141,16 +135,21 @@ public class PoolFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        new getAllWords().execute();//todo !!! bottom navigation da basilinca 2 kez fetch problemi
+        new getAllWords().execute();
     }
 
 
     private void sync(){
         if(isInternetAvailable(getContext())){
+            pDialog.setMessage("Sync..");
+            if(!pDialog.isShowing()) pDialog.show();
             Sync sync = new Sync(getContext(), new Sync.CustomCallback() {
                 @Override
                 public void successful() {
                     new getAllWords().execute();
+
+                    if(pDialog.isShowing())
+                        pDialog.dismiss();
                 }
             });
             sync.execute();

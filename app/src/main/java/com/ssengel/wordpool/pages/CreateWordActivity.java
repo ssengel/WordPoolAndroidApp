@@ -12,18 +12,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.ssengel.wordpool.DAO.WordDAO;
+import com.ssengel.wordpool.globalDAO.WordDAO;
 import com.ssengel.wordpool.LocalDAO.OperationRepo;
 import com.ssengel.wordpool.LocalDAO.WordRepo;
 import com.ssengel.wordpool.R;
-import com.ssengel.wordpool.helper.Config;
 import com.ssengel.wordpool.model.Operation;
 import com.ssengel.wordpool.model.Word;
-
-import java.util.Date;
-import java.util.List;
 
 public class CreateWordActivity extends AppCompatActivity {
 
@@ -47,8 +42,6 @@ public class CreateWordActivity extends AppCompatActivity {
         edtTr = (EditText) findViewById(R.id.edtTr);
         edtSentence = (EditText) findViewById(R.id.edtSentence);
 
-        wordRepo = new WordRepo(getApplicationContext());
-        operationRepo = new OperationRepo(getApplicationContext());
     }
 
     private void initListeners(){
@@ -78,9 +71,6 @@ public class CreateWordActivity extends AppCompatActivity {
                 op.setType("insert");
                 operationRepo.insertOperation(op);
 
-//                if (MainActivity.isInternetAvailable(getApplicationContext())){
-//                    wordDAO.createWord();
-//                }
                 finish();
 
             }catch (Exception e){
@@ -103,6 +93,9 @@ public class CreateWordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_word);
+
+        wordRepo = new WordRepo(getApplicationContext());
+        operationRepo = new OperationRepo(getApplicationContext());
 
         initViews();
         initListeners();

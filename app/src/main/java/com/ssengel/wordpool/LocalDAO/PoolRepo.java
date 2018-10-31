@@ -25,9 +25,5 @@ public class PoolRepo {
         return poolDataBase.poolDAO().getAllPools();
     }
 
-    public interface insertPool{
-        void successful(Pool pool);
-        void fail(Error error);
-    }
 
 }

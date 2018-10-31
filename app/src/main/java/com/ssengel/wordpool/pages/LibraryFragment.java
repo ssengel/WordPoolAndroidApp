@@ -1,13 +1,10 @@
 package com.ssengel.wordpool.pages;
 
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,16 +13,13 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.ssengel.wordpool.DAO.PoolDAO;
+import com.ssengel.wordpool.globalDAO.PoolDAO;
 import com.ssengel.wordpool.LocalDAO.PWordRepo;
 import com.ssengel.wordpool.LocalDAO.PoolRepo;
 import com.ssengel.wordpool.R;
 import com.ssengel.wordpool.adapter.PoolListAdapter;
-import com.ssengel.wordpool.helper.Config;
 import com.ssengel.wordpool.helper.GridSpacingItemDecoration;
-import com.ssengel.wordpool.model.PWord;
 import com.ssengel.wordpool.model.Pool;
 
 import java.util.ArrayList;

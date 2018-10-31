@@ -14,7 +14,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.ssengel.wordpool.DAO.WordDAO;
+import com.ssengel.wordpool.globalDAO.WordDAO;
 import com.ssengel.wordpool.LocalDAO.PWordRepo;
 import com.ssengel.wordpool.R;
 import com.ssengel.wordpool.adapter.PoolDetailAdapter;

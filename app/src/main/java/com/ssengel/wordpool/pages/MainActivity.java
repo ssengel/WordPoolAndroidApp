@@ -14,14 +14,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.ssengel.wordpool.DAO.PoolDAO;
-import com.ssengel.wordpool.DAO.WordDAO;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.ssengel.wordpool.globalDAO.PoolDAO;
+import com.ssengel.wordpool.globalDAO.WordDAO;
 import com.ssengel.wordpool.LocalDAO.OperationRepo;
 import com.ssengel.wordpool.LocalDAO.PWordRepo;
 import com.ssengel.wordpool.LocalDAO.PoolRepo;
@@ -29,14 +31,17 @@ import com.ssengel.wordpool.LocalDAO.WordRepo;
 import com.ssengel.wordpool.R;
 import com.ssengel.wordpool.helper.BottomNavigationBehavior;
 import com.ssengel.wordpool.helper.Config;
-import com.ssengel.wordpool.model.Operation;
+import com.ssengel.wordpool.helper.MyVolley;
 import com.ssengel.wordpool.model.PWord;
 import com.ssengel.wordpool.model.Pool;
 import com.ssengel.wordpool.model.Word;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -84,26 +89,74 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Pool");
         loadFragment(new PoolFragment());
 
-
+        //sync control
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         Boolean library = sharedPref.getBoolean(Config.LIBRARY_KEY, false);
 
         if(!library){
             if(isInternetAvailable(getApplicationContext())){
                 //fetch pools from web
+                getWords();
                 getPools();
-                //todo: fetch words if there are operation in web
-            }else{
-                new showMessage().execute("Your system is no up to date.\n No internet Connection..");
-            }
-        }else if(isInternetAvailable(getApplicationContext())){
-//            new GetOperationsToLocal().execute();
-            //todo: operasyolari kontrol et
-        }else{
 
+            }else{
+                new showMessage().execute("Your system is not Sync..");
+            }
         }
 
+
+
     }
+
+    public void getWords(){
+        wordDAO.getWords(new WordDAO.WordListCallback() {
+            @Override
+            public void successful(final List list) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try{
+                            for (Word word: (List<Word>) list){
+                                wordRepo.insertWord(word);
+                            }
+                            if(syncDeleteAllOperation()){
+                                loadFragment(new PoolFragment());
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
+                    }
+                }).start();
+            }
+            @Override
+            public void fail(Error error) {
+
+            }
+        });
+    }
+
+    public Boolean syncDeleteAllOperation()  {
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.DELETE, Config.URL_DELETE_OPERATIONS_BY_USER_ID(),null,future,future){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-access-token", Config.TOKEN);
+                return params;
+            }
+        };
+
+        MyVolley.getInstance().addToRequestQueue(req);
+        try {
+            JSONObject response = future.get(10, TimeUnit.SECONDS); // this will block (forever)
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static boolean isInternetAvailable(Context context) {
         final ConnectivityManager connectivityManager = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
         return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
@@ -171,6 +224,8 @@ public class MainActivity extends AppCompatActivity {
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
+
+
     private void getPools(){
         showDialog();
         pDialog.setMessage("\tFetching pools..");
@@ -188,20 +243,20 @@ public class MainActivity extends AppCompatActivity {
 
                         }catch (Exception e){
                             hideDialog();
-//                            Toast.makeText(getApplicationContext(), "Couldn't insert pools or pwords", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Couldn't insert pools or pwords", Toast.LENGTH_LONG).show();
                         }
                     }
                     @Override
                     public void err(Error error) {
                         hideDialog();
-//                        Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
             }
             @Override
             public void err(Error error) {
                 hideDialog();
-//                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -230,75 +285,10 @@ public class MainActivity extends AppCompatActivity {
 
             editor.putBoolean(Config.LIBRARY_KEY, true);
             editor.commit();
-
             hideDialog();
-            new showMessage().execute("Your system is up to date..");
         }
     }
 
-    private class GetOperationsToLocal extends AsyncTask<Void, Void, Void>{
-        @Override
-        protected Void doInBackground(Void... voids) {
-            List<Operation> operations= operationRepo.getAllOperations();
-            Log.e("OPERATIONS: =>> ", operations.toString());
-            if (operations.size() > 0){
-                for(Operation op: operations){
-                    makeLocalOperation(op);
-                }
-            }
-            return null;
-        }
-    }
-
-    private void makeLocalOperation(final Operation op){
-
-        String operationType = op.getType();
-        final Word word = wordRepo.getWordById(op.getWordId());
-
-        if(isInternetAvailable(getApplicationContext())){
-            if(operationType.equals("insert")){
-                wordDAO.createWord(word, new WordDAO.WordObjectCallback() {
-                    @Override
-                    public void successful(Word word) {
-                       deleteOperationFromLocal(op, word);
-                    }
-                    @Override
-                    public void fail(Error error) {
-                        new showMessage().execute("fail operation for : "+ word.getEng());
-                    }
-                });
-            }
-            if(operationType.equals("delete")){
-                wordDAO.deleteWord(op.getWordId(), new WordDAO.WordObjectCallback() {
-                    @Override
-                    public void successful(Word word) {
-                        deleteOperationFromLocal(op, word);
-                    }
-                    @Override
-                    public void fail(Error error) {
-                        new showMessage().execute("fail operation for : "+ word.getEng());
-                    }
-                });
-            }
-        }
-    }
-
-
-    private void deleteOperationFromLocal(final Operation op, final Word word){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if(op.getType().equals("insert")){
-                    operationRepo.deleteOperation(op.get_id());
-                    wordRepo.updateWordId(op.getWordId(), word.get_id());
-                }
-                if(op.getType().equals("delete")){
-                    operationRepo.deleteOperation(op.get_id());
-                }
-
-            }
-        }).start();
-    }
 
     @Override
     public void onBackPressed() {

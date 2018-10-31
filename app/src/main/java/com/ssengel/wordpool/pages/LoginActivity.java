@@ -4,28 +4,22 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.ssengel.wordpool.DAO.AuthDAO;
+import com.ssengel.wordpool.globalDAO.AuthDAO;
 
-import com.ssengel.wordpool.DAO.PoolDAO;
+import com.ssengel.wordpool.globalDAO.PoolDAO;
 import com.ssengel.wordpool.LocalDAO.PWordRepo;
 import com.ssengel.wordpool.LocalDAO.PoolRepo;
 import com.ssengel.wordpool.R;
 import com.ssengel.wordpool.helper.Config;
-import com.ssengel.wordpool.model.PWord;
-import com.ssengel.wordpool.model.Pool;
-
-import java.util.List;
+import com.ssengel.wordpool.syncronization.Sync;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -62,11 +56,13 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String email = txtEmail.getText().toString();
-                String password = txtPassword.getText().toString();
-
-                login(email,password);
+                if(MainActivity.isInternetAvailable(getApplicationContext())){
+                    String email = txtEmail.getText().toString();
+                    String password = txtPassword.getText().toString();
+                    login(email,password);
+                }else{
+                    Toast.makeText(getApplicationContext(),"No internet Connection Detected.",Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -100,14 +96,12 @@ public class LoginActivity extends AppCompatActivity {
 
                 Config.TOKEN = token;
                 Config.USER_ID = userId;
-                hideDialog();
 
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                sync();
             }
             @Override
             public void fail(Error error) {
                 hideDialog();
-                Log.i(TAG, "responseError: "+error.toString());
                 Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -136,18 +130,38 @@ public class LoginActivity extends AppCompatActivity {
         initVars();
         initListeners();
 
-        if(fEntry){//ilk giris daha onceden yapilmis
-            //todo: internet is detected Sync
+        if(fEntry){
             Config.TOKEN = sharedPref.getString(Config.TOKEN_KEY,null);
             Config.USER_ID = sharedPref.getString(Config.USER_ID_KEY,null);
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+            if(MainActivity.isInternetAvailable(getApplicationContext())) {
+                sync();
+            }else {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            }
         }else{
-            //todo: display login page and just Sync from web to local
+            //show login page
         }
 
 
     }
 
+    private void sync(){
+        try{
+            pDialog.setMessage("\tSync..");
+            showDialog();
+
+            Sync sync = new Sync(getApplicationContext(), null);
+            sync.execute();
+
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            hideDialog();
+        }catch (Exception e){
+            hideDialog();
+            Toast.makeText(getApplicationContext(), e.toString(),Toast.LENGTH_LONG).show();
+        }
 
 
+    }
 }
+

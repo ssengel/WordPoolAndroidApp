@@ -11,11 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ssengel.wordpool.DAO.WordDAO;
+import com.ssengel.wordpool.globalDAO.WordDAO;
 import com.ssengel.wordpool.LocalDAO.WordRepo;
 import com.ssengel.wordpool.R;
 import com.ssengel.wordpool.helper.CategoryToResorceId;
-import com.ssengel.wordpool.helper.Config;
 import com.ssengel.wordpool.model.Word;
 import com.wajahatkarim3.easyflipview.EasyFlipView;
 
@@ -104,19 +103,6 @@ public class RandomFragment extends Fragment {
         currentWord = wordList.get(i);
     }
 
-    private void fetchData(){
-        wordDAO.getWords(new WordDAO.WordListCallback() {
-            @Override
-            public void successful(List list) {
-                wordList = (ArrayList<Word>) list;
-            }
-
-            @Override
-            public void fail(Error error) {
-                Toast.makeText(getContext(),"Couldn't fetch the words..",Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
     private class getAllWords extends AsyncTask<String, Void, List<Word>> {
 
         @Override
@@ -124,14 +110,13 @@ public class RandomFragment extends Fragment {
             try {
                 return wordRepo.getAllWords();
             }catch (Exception e){
-                Toast.makeText(getContext(), ""+ e, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "depodan kelimeler cekilemedi !"+ e, Toast.LENGTH_LONG).show();
                 return null;
             }
         }
 
         @Override
         protected void onPostExecute(List<Word> words) {
-            Toast.makeText(getContext(), words.toString(),Toast.LENGTH_LONG).show();
             wordList = (ArrayList<Word>) words;
         }
     }

@@ -23,7 +23,7 @@ public class Config {
     public static String LIBRARY_KEY = "library";
 
     //URLS
-    public static final String URL_ROOT = "http://192.168.0.36:8080/";
+    public static final String URL_ROOT = "http://192.168.1.38:8080/";
     public static final String URL_LOGIN = URL_ROOT + "login";
     public static final String URL_POOL = URL_ROOT + "pool";
     public static final String URL_PWORD = URL_ROOT + "pword";
@@ -33,5 +33,5 @@ public class Config {
     public static String URL_OPERATION(){
         return URL_ROOT +"user/"+ USER_ID +"/operation/";
     }
-
+    public static String URL_DELETE_OPERATIONS_BY_USER_ID(){ return URL_ROOT +"user/" + USER_ID +"/deleteOps"; }
 }

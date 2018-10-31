@@ -19,7 +19,7 @@ public class WordRepo {
     }
 
     public void insertWord(Word word){
-        // web den eklenmis olabilir
+        // web den eklenmemis kelimeler icin
         if(word.get_id() == null){
             word.set_id(new Date().getTime() + "");
             word.setUserId(Config.USER_ID);
@@ -42,5 +42,9 @@ public class WordRepo {
 
     public void deleteWord(String id){
         wordDataBase.wordDAO().deleteWord(id);
+    }
+
+    public void updateWord(Word word){
+        wordDataBase.wordDAO().updateWord(word);
     }
 }

@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,7 +15,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ssengel.wordpool.DAO.WordDAO;
+import com.ssengel.wordpool.globalDAO.WordDAO;
 import com.ssengel.wordpool.LocalDAO.OperationRepo;
 import com.ssengel.wordpool.LocalDAO.WordRepo;
 import com.ssengel.wordpool.R;
@@ -110,40 +109,6 @@ public class WordDetailActivity extends AppCompatActivity {
         txtSentence.setText(word.getSentence());
     }
 
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-    }
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_word_detail, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle arrow click here
-        if (item.getItemId() == android.R.id.home) {
-            finish(); // close this activity and return to preview activity (if there is any)
-        }if(item.getItemId() == R.id.action_edit){
-            Intent intent = new Intent(getApplicationContext(), EditWordActivity.class);
-            intent.putExtra("word", globalWord);
-            startActivity(intent);
-        }if(item.getItemId() == R.id.action_delete){
-            alert.show();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     private void createDialog(){
 
         builder.setMessage("Are you sure?");
@@ -189,6 +154,47 @@ public class WordDetailActivity extends AppCompatActivity {
             }
         }).start();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new GetWordFromLocal().execute(wordId);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_word_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }if(item.getItemId() == R.id.action_edit){
+            Intent intent = new Intent(getApplicationContext(), EditWordActivity.class);
+            intent.putExtra("word", globalWord);
+            startActivity(intent);
+        }if(item.getItemId() == R.id.action_delete){
+            alert.show();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
 
 }

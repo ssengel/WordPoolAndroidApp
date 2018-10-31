@@ -3,6 +3,7 @@ package com.ssengel.wordpool.LocalDAO;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import com.ssengel.wordpool.model.Word;
 
@@ -27,5 +28,8 @@ public interface WordDAO {
 
     @Query("DELETE FROM word WHERE _id =:id")
     void deleteWord(String id);
+
+    @Update
+    void updateWord(Word word);
 
 }

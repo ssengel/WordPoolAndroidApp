@@ -1,4 +1,4 @@
-package com.ssengel.wordpool.DAO;
+package com.ssengel.wordpool.globalDAO;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;

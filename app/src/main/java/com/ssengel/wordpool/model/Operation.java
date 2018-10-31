@@ -9,9 +9,16 @@ public class Operation {
     @NonNull
     @PrimaryKey(autoGenerate = true)
     private int _id;
+
     private String type;
     @NonNull
     private String wordId;
+
+    public Operation(){}
+    public Operation(String type, @NonNull String wordId) {
+        this.type = type;
+        this.wordId = wordId;
+    }
 
     public int get_id() {
         return _id;

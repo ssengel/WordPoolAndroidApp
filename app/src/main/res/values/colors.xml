@@ -13,7 +13,7 @@
     <color name="colorOrance">#e77600</color>
 
 
-    <color name="windowBackground">#ffffff</color>
+    <color name="windowBackground">#f1f5f7</color>
     <color name="navigationBarColor">#000000</color>
 
     <color name="eng">#535353</color>
@@ -21,13 +21,6 @@
     <color name="sentence">#4285F4</color>
     <color name="dateColor">#696969</color>
     <color name="itemLine">#37474F</color>
-
-    <!--<color name="eng">#ffffff</color>-->
-    <!--<color name="tr">#ffffff</color>-->
-    <!--<color name="sentence">#ffffff</color>-->
-    <!--<color name="dateColor">#ffffff</color>-->
-    <!--<color name="itemLine">#ffffff</color>-->
-
 
 
     <color name="btnDefault">#e7a200</color>

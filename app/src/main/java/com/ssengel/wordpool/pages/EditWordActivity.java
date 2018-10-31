@@ -14,8 +14,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.ssengel.wordpool.DAO.WordDAO;
+import com.ssengel.wordpool.globalDAO.WordDAO;
+import com.ssengel.wordpool.LocalDAO.OperationRepo;
+import com.ssengel.wordpool.LocalDAO.WordRepo;
 import com.ssengel.wordpool.R;
+import com.ssengel.wordpool.model.Operation;
 import com.ssengel.wordpool.model.Word;
 
 public class EditWordActivity extends AppCompatActivity {
@@ -31,6 +34,8 @@ public class EditWordActivity extends AppCompatActivity {
     private AppCompatSpinner sprCategory;
     private Toolbar toolbar;
     private ProgressDialog pDialog;
+    private WordRepo wordRepo;
+    private OperationRepo operationRepo;
 
 
     @Override
@@ -39,6 +44,8 @@ public class EditWordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_word);
 
         word = (Word) getIntent().getExtras().get("word");
+        wordRepo = new WordRepo(getApplicationContext());
+        operationRepo = new OperationRepo(getApplicationContext());
 
         initViews();
 
@@ -73,39 +80,34 @@ public class EditWordActivity extends AppCompatActivity {
 
                 closeKeyboard();
 
-                pDialog.setMessage("Updating word ..");
-                showDialog();
+                word.setEng(edtEng.getText().toString());
+                word.setTr(edtTr.getText().toString());
+                word.setSentence(edtSentence.getText().toString());
+                word.setCategory(sprCategory.getSelectedItem().toString());
 
-                Word mWord = new Word();
-                mWord.set_id(word.get_id());
-                mWord.setEng(edtEng.getText().toString());
-                mWord.setTr(edtTr.getText().toString());
-                mWord.setSentence(edtSentence.getText().toString());
-                mWord.setCategory(sprCategory.getSelectedItem().toString());
-
-
-                wordDAO.updateWord(mWord, new WordDAO.WordObjectCallback() {
-                    @Override
-                    public void successful(Word word) {
-                        hideDialog();
-                        finish();
-                    }
-
-                    @Override
-                    public void fail(Error error) {
-                        Snackbar.make(coordinatorEditWord, error.toString(),Snackbar.LENGTH_LONG).show();
-                        hideDialog();
-                    }
-                });
-
-
-
-
-
-
+                updateWord(word);
             }
         });
     }
+
+    private void updateWord(final Word word){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    wordRepo.updateWord(word);
+                    operationRepo.insertOperation(new Operation("update",word.get_id()));
+                    finish();
+                }catch (Exception e){
+                    Snackbar.make(coordinatorEditWord, e.toString(),Snackbar.LENGTH_LONG).show();
+                }
+
+            }
+        }).start();
+
+    }
+
+
     private void setFields(){
         edtEng.setText(word.getEng());
         edtTr.setText(word.getTr());
